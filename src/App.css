@@ -1,0 +1,24 @@
+body {
+    background-color: #f2f2f2;
+    padding: 0;
+}
+
+.gradient {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(to left, #043F88, #00B185);
+}
+
+.error {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.btn-verde {
+    color: white !important;
+}
+
+.bg-warning {
+    color: #212529 !important;
+}
