@@ -9,7 +9,7 @@ export default function Usuarios() {
         navigate('/usuarios')
     }, [])
     return (
-        <Container className='mt-5'>
+        <Container className='mt-md-4 mt-3'>
             <ListaUsuarios />
         </Container>
     )

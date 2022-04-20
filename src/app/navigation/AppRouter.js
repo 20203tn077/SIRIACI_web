@@ -8,14 +8,16 @@ import NavInvitado from './NavInvitado'
 import IncidenciasAdministrador from '../screens/administrador/Incidencias'
 import CapsulasAdministrador from '../screens/administrador/Capsulas'
 import Alert, { seleccionarRol } from '../utils/Alert'
+import None from '../screens/None'
+import Verificacion from '../screens/invitado/Verificacion'
 
 export default function AppRouter() {
-    const { sesion: { autenticado, rolActivo, multiRol}, dispatch } = useContext(AutenticacionContext)
-    useEffect(()=>{
+    const { sesion: { autenticado, rolActivo, multiRol }, dispatch } = useContext(AutenticacionContext)
+    useEffect(() => {
         if (autenticado && !rolActivo) {
             if (multiRol) seleccionarRol(dispatch, null, true)
             else {
-                dispatch({tipo:'ROL POR DEFECTO'})
+                dispatch({ tipo: 'ROL POR DEFECTO' })
                 Alert.close()
             }
         }
@@ -25,34 +27,42 @@ export default function AppRouter() {
             {autenticado ? <>
                 {rolActivo ? <>
                     <NavAutenticado />
-                    <Routes>
-                        {({
-                            'ROLE_ADMINISTRADOR':
-                            <>
-                                <Route path='/' element={<Usuarios/>} />
-                                <Route path='/usuarios' element={<Usuarios/>} />
-                                <Route path='/incidencias/:codigo' element={<IncidenciasAdministrador/>} />
-                                <Route path='/incidencias' element={<IncidenciasAdministrador/>} />
-                                <Route path='/capsulas' element={<CapsulasAdministrador/>} />
-                            </>,
-                            'ROLE_RESPONSABLE':
-                            <>
-                                <Route path='/incidencias' element={<div>Holi</div>} />
-                                <Route path='/capsulas' element={<div>Holi</div>} />
-                            </>
-                        })[rolActivo] || null}
-                    </Routes>
                 </> : <>
                     <NavInvitado />
                 </>}
             </> : <>
                 <NavInvitado />
-                <Routes>
-                    <Route path='/' element={<InicioSesion />} />
-                    <Route path='/Restablecer' element={<div>Restablecer contraseña</div>} />
-                    <Route path='*' element={<InicioSesion />} />
-                </Routes>
             </>}
+            <Routes>
+                {autenticado ? <>
+                    {rolActivo ? <>
+                        {({
+                            'ROLE_ADMINISTRADOR':
+                                <>
+                                    <Route path='/' element={<Usuarios />} />
+                                    <Route path='/usuarios' element={<Usuarios />} />
+                                    <Route path='/incidencias/:codigo' element={<IncidenciasAdministrador />} />
+                                    <Route path='/incidencias' element={<IncidenciasAdministrador />} />
+                                    <Route path='/capsulas' element={<CapsulasAdministrador />} />
+                                </>,
+                            'ROLE_RESPONSABLE':
+                                <>
+                                    <Route path='/incidencias' element={<div>Holi</div>} />
+                                    <Route path='/capsulas' element={<div>Holi</div>} />
+                                </>
+                        })[rolActivo] || null}
+                    </> : <>
+                        <NavInvitado />
+                    </>}
+                </> : <>
+                    <Route path='/' element={<InicioSesion />} />
+                    <Route path='/restablecer/solicitar' element={<div>Restablecer contraseña</div>} />
+                    <Route path='/restablecer/verificar' element={<div>Restablecer contraseña</div>} />
+                    <Route path='/restablecer/nueva' element={<div>Restablecer contraseña</div>} />
+                </>}
+                <Route path='/verificacion/' element={<Verificacion/>} />
+                <Route path='*' element={<None/>} />
+            </Routes>
         </Router>
     )
 }

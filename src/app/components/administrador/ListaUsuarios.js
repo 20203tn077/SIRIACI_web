@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Badge, Button, Card, Col, Container, FormControl, InputGroup, Nav, Row } from 'react-bootstrap'
-import { Conexion } from '../../utils/Conexion'
+import { Badge, Button, Card, Col, Container, Form, FormControl, InputGroup, Nav, Row } from 'react-bootstrap'
 import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
-import { getNombreCompleto } from '../../utils/Formateador'
-import Alert, { alertConsulta, alertEliminacion, alertRegistrar, mostrarMensaje } from '../../utils/Alert'
+import { getNombreCompleto, getUsuarioLista } from '../../utils/Formateador'
+import Alert, { alertConfirmacion, alertConsulta, alertEliminacion, alertRegistrar, mostrarMensaje } from '../../utils/Alert'
 import Tema from '../../utils/Tema'
 import Input, { Pill, Select } from '../../utils/Input'
 import { ValidacionesUsuario } from '../../utils/Validador'
 import * as ReactDOM from 'react-dom/client'
+import { Seleccionables, UsuariosAdministrador } from '../../utils/Conexion'
 
 export default function ListaUsuarios() {
   const { dispatch } = useContext(AutenticacionContext)
@@ -48,9 +48,9 @@ export default function ListaUsuarios() {
 
   useEffect(() => {
     (async () => {
-      let res = await Conexion.Seleccionables.obtenerCarreras()
+      let res = await Seleccionables.obtenerCarreras()
       if (!res.error) setCarreras(res.datos)
-      res = await Conexion.Seleccionables.obtenerAspectos()
+      res = await Seleccionables.obtenerAspectos()
       if (!res.error) setAspectos(res.datos)
     })()
   }, [])
@@ -78,10 +78,23 @@ export default function ListaUsuarios() {
     setFiltro(txtFiltro.current.value)
   }
 
-  function formularioRegistro() {
+  function registrarUsuario(usuario) {
+    UsuariosAdministrador.registrarUsuario(dispatch, usuario).then((res) => {
+      if (!res.error) {
+        mostrarMensaje('Registro realizado', 'El usuario ha sido registrado exitósamente. La cuenta debe verificarse para ser dada de alta en el sistema y permanecerá oculta hasta entonces.', 'success')
+      } else {
+        const errores = res.errores
+        mostrarMensaje('Error al registrasdar al usuario', res.mensajeGeneral, 'error').then((res) => {
+          if (res.isConfirmed) formularioRegistro(usuario, errores)
+        })
+      }
+    }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+  }
+
+  function formularioRegistro(datosUsuario, errores) {
+    if (!datosUsuario) datosUsuario = {}
+    if (!errores) errores = {}
     let selectCarreras
-    const datosUsuario = {}
-    let errores = {}
     let carrerasFiltradas = []
 
     function setAdministrador() {
@@ -108,7 +121,8 @@ export default function ListaUsuarios() {
 
     function comprobarDivision() {
       guardar()
-      carrerasFiltradas = carreras.find((division) => division.id == datosUsuario.division).carreras
+      const objetos = carreras.find((division) => division.id == datosUsuario.division)
+      carrerasFiltradas = objetos ? objetos.carreras : []
 
       try {
         selectCarreras.unmount()
@@ -116,7 +130,7 @@ export default function ListaUsuarios() {
       selectCarreras = ReactDOM.createRoot(txtCarrera.current)
       selectCarreras.render(
         <>
-          <option>Selecciona una opción...</option>
+          <option value='' >Selecciona una opción...</option>
           {carrerasFiltradas.map((opcion, index) => (
             <option key={index} value={opcion.id} >{opcion.nombre}</option>
           ))}
@@ -136,25 +150,88 @@ export default function ListaUsuarios() {
       datosUsuario.division = txtDivision.current.value
       datosUsuario.carrera = txtCarrera.current.value
       datosUsuario.cuatrimestre = txtCuatrimestre.current.value
-      datosUsuario.grupo = txtGrupo.current.value
+      datosUsuario.grupo = txtGrupo.current.value.toUpperCase()
       datosUsuario.aspecto = txtAspecto.current.value
     }
 
-    function validar() {
+    function registro() {
+      errores = {}
+      let numErrores = 0
+      let numErroresEstudiante = 0
+      let numErroresResponsable = 0
+      let error
       guardar()
-      errores = {
-        nombre: ValidacionesUsuario.validarNombre(datosUsuario.nombre),
-        apellido1: ValidacionesUsuario.validarApellido1(datosUsuario.apellido1),
-        apellido2: ValidacionesUsuario.validarApellido2(datosUsuario.apellido2),
-        correo: ValidacionesUsuario.validarCorreo(datosUsuario.correo),
-        telefono: ValidacionesUsuario.validarTelefono(datosUsuario.telefono),
-        contrasena: ValidacionesUsuario.validarContrasena(datosUsuario.contrasena),
-        cuatrimestre: ValidacionesUsuario.validarCuatrimestre(datosUsuario.cuatrimestre),
-        grupo: ValidacionesUsuario.validarGrupo(datosUsuario.grupo),
-        correo2: ValidacionesUsuario.validarConfirmacionCorreo(datosUsuario.correo, datosUsuario.correo2),
-        contrasena2: ValidacionesUsuario.validarConfirmacionContrasena(datosUsuario.contrasena, datosUsuario.contrasena2)
+
+      error = ValidacionesUsuario.validarNombre(datosUsuario.nombre)
+      if (error) {
+        errores.nombre = error
+        numErrores++
       }
-      formulario()
+      error = ValidacionesUsuario.validarApellido1(datosUsuario.apellido1)
+      if (error) {
+        errores.apellido1 = error
+        numErrores++
+      }
+      error = ValidacionesUsuario.validarApellido2(datosUsuario.apellido2)
+      if (error) {
+        errores.apellido2 = error
+        numErrores++
+      }
+      error = ValidacionesUsuario.validarTelefono(datosUsuario.telefono)
+      if (error) {
+        errores.telefono = error
+        numErrores++
+      }
+      error = ValidacionesUsuario.validarCorreo(datosUsuario.correo)
+      if (error) {
+        errores.correo = error
+        numErrores++
+      }
+      error = ValidacionesUsuario.validarConfirmacionCorreo(datosUsuario.correo, datosUsuario.correo2)
+      if (error) {
+        errores.correo2 = error
+        numErrores++
+      }
+      error = ValidacionesUsuario.validarContrasena(datosUsuario.contrasena)
+      if (error) {
+        errores.contrasena = error
+        numErrores++
+      }
+      error = ValidacionesUsuario.validarConfirmacionContrasena(datosUsuario.contrasena, datosUsuario.contrasena2)
+      if (error) {
+        errores.contrasena2 = error
+        numErrores++
+      }
+      error = !datosUsuario.carrera ? 'Debes seleccionar una carrera.' : null
+      if (error) {
+        errores.carrera = error
+        numErroresEstudiante++
+      }
+      error = ValidacionesUsuario.validarCuatrimestre(datosUsuario.cuatrimestre)
+      if (error) {
+        errores.cuatrimestre = error
+        numErroresEstudiante++
+      }
+      error = ValidacionesUsuario.validarGrupo(datosUsuario.grupo)
+      if (error) {
+        errores.grupo = error
+        numErroresEstudiante++
+      }
+      error = !datosUsuario.aspecto ? 'Debes seleccionar un aspecto ambiental.' : null
+      if (error) {
+        errores.aspecto = error
+        numErroresResponsable++
+      }
+
+      if (numErrores == 0 && (!datosUsuario.estudiante || numErroresEstudiante == 0) && (!datosUsuario.responsable || numErroresResponsable == 0)) registrarUsuario(datosUsuario)
+      else formulario()
+    }
+
+    function cancelacion() {
+      guardar()
+      alertConfirmacion('Cancelar registro', '¿Deseas salir? Se perderá la información ingresada.', 'warning').then((res) => {
+        if (res.isDismissed) formulario()
+      })
     }
 
     function comprobarCorreo() {
@@ -162,6 +239,10 @@ export default function ListaUsuarios() {
       const estudiante = ValidacionesUsuario.isCorreoEstudiante(correo)
       const utez = ValidacionesUsuario.isCorreoInstitucional(correo)
       datosUsuario.utez = utez
+      if (!utez) {
+        datosUsuario.administrador = false
+        datosUsuario.responsable = false
+      }
       contenedorUtez.current.style.display = utez ? 'block' : 'none'
       contenedorExterna.current.style.display = !utez ? 'block' : 'none'
       contenedorAdministrador.current.style.display = utez ? 'block' : 'none'
@@ -186,6 +267,7 @@ export default function ListaUsuarios() {
               <Col xs='12' md='6'>
                 <Input
                   nombre='Nombre(s)'
+                  obligatorio
                   referencia={txtNombre}
                   error={errores.nombre}
                   valorInicial={datosUsuario.nombre}
@@ -193,7 +275,8 @@ export default function ListaUsuarios() {
               </Col>
               <Col xs='12' md='6'>
                 <Input
-                  nombre='Apellido1'
+                  nombre='Primer apellido'
+                  obligatorio
                   referencia={txtApellido1}
                   error={errores.apellido1}
                   valorInicial={datosUsuario.apellido1}
@@ -201,7 +284,7 @@ export default function ListaUsuarios() {
               </Col>
               <Col xs='12' md='6'>
                 <Input
-                  nombre='Apellido2'
+                  nombre='Segundo apellido'
                   referencia={txtApellido2}
                   error={errores.apellido2}
                   valorInicial={datosUsuario.apellido2}
@@ -210,47 +293,58 @@ export default function ListaUsuarios() {
               <Col xs='12' md='6'>
                 <Input
                   nombre='Telefono'
+                  obligatorio
                   referencia={txtTelefono}
                   error={errores.telefono}
                   valorInicial={datosUsuario.telefono}
+                  tipo='tel'
                 />
               </Col>
               <Col xs='12' md='6'>
                 <Input
                   nombre='Correo electrónico'
+                  obligatorio
                   referencia={txtCorreo}
                   error={errores.correo}
                   valorInicial={datosUsuario.correo}
                   eventoInput={comprobarCorreo}
+                  tipo='email'
                 />
               </Col>
               <Col xs='12' md='6'>
                 <Input
                   nombre='Confirmar correo electrónico'
+                  obligatorio
                   referencia={txtCorreo2}
                   error={errores.correo2}
                   valorInicial={datosUsuario.correo2}
+                  tipo='email'
                 />
               </Col>
               <Col xs='12' md='6'>
                 <Input
                   nombre='Contraseña'
+                  obligatorio
                   referencia={txtContrasena}
                   error={errores.contrasena}
                   valorInicial={datosUsuario.contrasena}
+                  tipo='password'
                 />
               </Col>
               <Col xs='12' md='6'>
                 <Input
                   nombre='Confirmar contraseña'
+                  obligatorio
                   referencia={txtContrasena2}
                   error={errores.contrasena2}
                   valorInicial={datosUsuario.contrasena2}
+                  tipo='password'
                 />
               </Col>
-              <Col xs='12' md='6' ref={contenedorDivision} style={{display: datosUsuario.estudiante ? 'block' : 'none'}}>
+              <Col xs='12' md='6' ref={contenedorDivision} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
                 <Select
                   nombre='División académica'
+                  obligatorio
                   referencia={txtDivision}
                   error={errores.division}
                   opciones={carreras}
@@ -258,34 +352,42 @@ export default function ListaUsuarios() {
                   eventoChange={comprobarDivision}
                 />
               </Col>
-              <Col xs='12' md='6' ref={contenedorCarrera} style={{display: datosUsuario.estudiante ? 'block' : 'none'}}>
+              <Col xs='12' md='6' ref={contenedorCarrera} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
                 <Select
                   nombre='Carrera'
+                  obligatorio
                   referencia={txtCarrera}
                   error={errores.carrera}
                   opciones={carrerasFiltradas}
                   valorInicial={datosUsuario.carrera}
                 />
               </Col>
-              <Col xs='12' md='6' ref={contenedorCuatrimestre} style={{display: datosUsuario.estudiante ? 'block' : 'none'}}>
+              <Col xs='12' md='6' ref={contenedorCuatrimestre} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
                 <Input
                   nombre='Cuatrimestre'
+                  obligatorio
                   referencia={txtCuatrimestre}
                   error={errores.cuatrimestre}
                   valorInicial={datosUsuario.cuatrimestre}
+                  tipo='number'
+                  min='1'
+                  max='11'
                 />
               </Col>
-              <Col xs='12' md='6' ref={contenedorGrupo} style={{display: datosUsuario.estudiante ? 'block' : 'none'}}>
+              <Col xs='12' md='6' ref={contenedorGrupo} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
                 <Input
                   nombre='Grupo'
+                  obligatorio
                   referencia={txtGrupo}
                   error={errores.grupo}
                   valorInicial={datosUsuario.grupo}
+                  maxlength='1'
                 />
               </Col>
-              <Col xs='12' md='6' ref={contenedorAspecto} style={{display: datosUsuario.responsable ? 'block' : 'none'}}>
+              <Col xs='12' md='6' ref={contenedorAspecto} style={{ display: datosUsuario.responsable ? 'block' : 'none' }}>
                 <Select
                   nombre='Aspecto ambiental'
+                  obligatorio
                   referencia={txtAspecto}
                   error={errores.aspecto}
                   opciones={aspectos}
@@ -315,6 +417,7 @@ export default function ListaUsuarios() {
             </Row>
           </>
         ),
+        allowEnterKey: true,
         showCancelButton: true,
         showConfirmButton: true,
         showDenyButton: false,
@@ -324,15 +427,15 @@ export default function ListaUsuarios() {
         width: 800,
         confirmButtonColor: Tema.azul
       }).then((res) => {
-        if (res.isConfirmed) validar()
+        if (res.isConfirmed) registro()
+        if (res.isDismissed) cancelacion()
       })
     }
-
     formulario()
   }
 
   function eliminarUsuario(id) {
-    Conexion.UsuariosAdministrador.eliminarUsuario(dispatch, id).then((res) => {
+    UsuariosAdministrador.eliminarUsuario(dispatch, id).then((res) => {
       if (!res.error) {
         const usuariosActualizado = usuarios.map(usuario => {
           if (usuario.id == id) return { ...usuario, activo: false }
@@ -345,7 +448,7 @@ export default function ListaUsuarios() {
   }
 
   function consultarUsuario(id) {
-    Conexion.UsuariosAdministrador.obtenerUsuario(dispatch, id).then((res) => {
+    UsuariosAdministrador.obtenerUsuario(dispatch, id).then((res) => {
       if (!res.error) {
         const { correo, telefono, activo, comunidadUtez, estudiante, responsable, administrador } = res.datos
 
@@ -433,21 +536,26 @@ export default function ListaUsuarios() {
             <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Usuarios</Card.Title>
           </Col>
           <Col md='auto' className='p-md-0'>
-            <InputGroup>
-              <FormControl
-                ref={txtFiltro}
-                placeholder='Nombre o correo electrónico'
-              />
-              <Button onClick={buscar} variant='verde'><Icon.Search /></Button>
-            </InputGroup>
+            <Form noValidate onSubmit={(event) => {
+              event.preventDefault()
+              buscar()
+            }}>
+              <InputGroup>
+                <FormControl
+                  ref={txtFiltro}
+                  placeholder='Nombre o correo electrónico'
+                />
+                <Button type='submit' variant='verde'><Icon.Search /></Button>
+              </InputGroup>
+            </Form>
           </Col>
           <Col md='auto'>
-            <Button ref={btnAgregar} onClick={formularioRegistro} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
+            <Button ref={btnAgregar} onClick={() => formularioRegistro()} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
           </Col>
         </Row>
       </Card.Header>
       <Card.Body>
-        <TablaInfinita onClickElemento={consultarUsuario} contenido={usuarios} setContenido={setUsuarios} filtro={filtro} numerada columnas={columnas} fuenteContenido={Conexion.UsuariosAdministrador.obtenerUsuarios} />
+        <TablaInfinita onClickElemento={consultarUsuario} contenido={usuarios} setContenido={setUsuarios} filtro={filtro} numerada columnas={columnas} fuenteContenido={UsuariosAdministrador.obtenerUsuarios} />
       </Card.Body>
     </Card>
 

@@ -1,9 +1,10 @@
 import { mostrarLoader, mostrarMensaje } from "./Alert"
 
-const baseUrl = 'http://192.168.100.25:8080'
+//const baseUrl = 'https://siriaci-service.azurewebsites.net'
+const baseUrl = 'http://localhost:8080'
 
 function getInit(metodo, datos) {
-    const sesion = JSON.parse(localStorage.getItem('sesion')) || null 
+    const sesion = JSON.parse(localStorage.getItem('sesion')) || null
     return {
         method: metodo,
         headers: {
@@ -26,146 +27,182 @@ function validarPeticion(dispatch, respuesta) {
     }
 }
 
-export const Conexion = {
-    InicioSesion: {
-        iniciarSesion: (dispatch, datos) => {
-            mostrarLoader()
-            let url = new URL(`/api/iniciosesion/`, baseUrl)
-            return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
-        }
-    },
-    UsuariosAdministrador: {
-        obtenerUsuarios: (dispatch, pagina, filtro) => {
-            let url = new URL(`/api/administrador/usuarios/`, baseUrl)
-            if (pagina) url.searchParams.set('pagina', pagina)
-            if (filtro) url.searchParams.set('filtro', filtro)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerUsuario: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/administrador/usuarios/${id}`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        eliminarUsuario: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/administrador/usuarios/${id}`, baseUrl)
-            return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
-        }
-    },
-    IncidenciasAdministrador: {
-        obtenerIncidencias: (dispatch, pagina, filtro) => {
-            let url = new URL(`/api/administrador/incidencias/`, baseUrl)
-            if (pagina) url.searchParams.set('pagina', pagina)
-            if (filtro) url.searchParams.set('filtro', filtro)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerIncidencia: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/administrador/incidencias/${id}`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        eliminarIncidencia: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/administrador/incidencias/${id}`, baseUrl)
-            return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
-        }
-    },
-    CapsulasAdministrador: {
-        obtenerCapsulas: (dispatch, pagina, filtro) => {
-            let url = new URL(`/api/administrador/capsulas/`, baseUrl)
-            if (pagina) url.searchParams.set('pagina', pagina)
-            if (filtro) url.searchParams.set('filtro', filtro)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerCapsula: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/administrador/capsulas/${id}`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        eliminarCapsula: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/administrador/capsulas/${id}`, baseUrl)
-            return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
-        }
-    },
-    CapsulasResponsable: {
-    },
-    CapsulasPublico: {
-        obtenerCapsulas: (dispatch, pagina) => {
-            let url = new URL(`/api/publico/capsulas/`, baseUrl)
-            if (pagina) url.searchParams.set('pagina', pagina)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerCapsula: (dispatch, id) => {
-            mostrarLoader()
-            let url = new URL(`/api/publico/capsulas/${id}`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerCapsulaByCodigo: (dispatch, codigo) => {
-            mostrarLoader()
-            let url = new URL(`/api/publico/capsulas/codigo/${codigo}`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        }
-    },
-    Seleccionables: {
-        obtenerImportancias: (dispatch) => {
-            let url = new URL(`/api/seleccionables/importancias/`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerEstados: (dispatch) => {
-            let url = new URL(`/api/seleccionables/estados/`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerAspectos: (dispatch) => {
-            let url = new URL(`/api/seleccionables/aspectos/`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        },
-        obtenerCarreras: (dispatch) => {
-            let url = new URL(`/api/seleccionables/carreras/`, baseUrl)
-            return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
-        }
+export const Verificacion = {
+    verificarUsuario(dispatch, datos) {
+        mostrarLoader()
+        let url = new URL(`/api/verificacion/`, baseUrl)
+        return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
     }
 }
-
-
-
-/*
-export const  = {
-
+export const Acceso = {
+    iniciarSesion: (dispatch, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/iniciosesion/`, baseUrl)
+        return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
+export const UsuariosAdministrador = {
+    obtenerUsuarios: (dispatch, pagina, filtro) => {
+        let url = new URL(`/api/administrador/usuarios/`, baseUrl)
+        if (pagina) url.searchParams.set('pagina', pagina)
+        if (filtro) url.searchParams.set('filtro', filtro)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerUsuario: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/usuarios/${id}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    registrarUsuario: (dispatch, usuario) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/usuarios/`, baseUrl)
+        return fetch(url, getInit('POST', usuario)).then((res) => validarPeticion(dispatch, res))
+    },
+    modificarUsuario: (dispatch, id, usuario) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/usuarios/${id}`, baseUrl)
+        return fetch(url, getInit('PATCH')).then((res) => validarPeticion(dispatch, res))
+    },
+    eliminarUsuario: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/usuarios/${id}`, baseUrl)
+        return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
+export const IncidenciasAdministrador = {
+    obtenerIncidencias: (dispatch, pagina, filtro) => {
+        let url = new URL(`/api/administrador/incidencias/`, baseUrl)
+        if (pagina) url.searchParams.set('pagina', pagina)
+        if (filtro) url.searchParams.set('filtro', filtro)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerIncidencia: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/incidencias/${id}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerIncidenciaPorCodigo: (dispatch, codigo) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/incidencias/codigo/${codigo}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    antenderIncidencia: (dispatch, id, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/incidencias/${id}`, baseUrl)
+        return fetch(url, getInit('PATCH')).then((res) => validarPeticion(dispatch, res))
+    },
+    eliminarIncidencia: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/incidencias/${id}`, baseUrl)
+        return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
+export const IncidenciasResponsable = {
+    obtenerIncidencias: (dispatch, pagina, filtro) => {
+        let url = new URL(`/api/responsable/incidencias/`, baseUrl)
+        if (pagina) url.searchParams.set('pagina', pagina)
+        if (filtro) url.searchParams.set('filtro', filtro)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerIncidencia: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/incidencias/${id}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerIncidenciaPorCodigo: (dispatch, codigo) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/incidencias/codigo/${codigo}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    antenderIncidencia: (dispatch, id, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/incidencias/${id}`, baseUrl)
+        return fetch(url, getInit('PATCH')).then((res) => validarPeticion(dispatch, res))
+    },
 }
-export const  = {
-
+export const CapsulasAdministrador = {
+    obtenerCapsulas: (dispatch, pagina, filtro) => {
+        let url = new URL(`/api/administrador/capsulas/`, baseUrl)
+        if (pagina) url.searchParams.set('pagina', pagina)
+        if (filtro) url.searchParams.set('filtro', filtro)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    registrarCapsula: (dispatch, capsula) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/capsulas/`, baseUrl)
+        return fetch(url, getInit('POST', capsula)).then((res) => validarPeticion(dispatch, res))
+    },
+    modificarCapsula: (dispatch, id, capsula) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('PATCH', capsula)).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerCapsula: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    eliminarCapsula: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
+export const CapsulasResponsable = {
+    obtenerCapsulas: (dispatch, pagina, filtro) => {
+        let url = new URL(`/api/responsable/capsulas/`, baseUrl)
+        if (pagina) url.searchParams.set('pagina', pagina)
+        if (filtro) url.searchParams.set('filtro', filtro)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    registrarCapsula: (dispatch, capsula) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/capsulas/`, baseUrl)
+        return fetch(url, getInit('POST', capsula)).then((res) => validarPeticion(dispatch, res))
+    },
+    modificarCapsula: (dispatch, id, capsula) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('PATCH', capsula)).then((res) => validarPeticion(dispatch, res))
+    },
+    eliminarCapsula: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('DELETE')).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
+export const CapsulasPublico = {
+    obtenerCapsulas: (dispatch, pagina) => {
+        let url = new URL(`/api/publico/capsulas/`, baseUrl)
+        if (pagina) url.searchParams.set('pagina', pagina)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerCapsula: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/publico/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerCapsulaByCodigo: (dispatch, codigo) => {
+        mostrarLoader()
+        let url = new URL(`/api/publico/capsulas/codigo/${codigo}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
+export const Seleccionables = {
+    obtenerImportancias: (dispatch) => {
+        let url = new URL(`/api/seleccionables/importancias/`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerEstados: (dispatch) => {
+        let url = new URL(`/api/seleccionables/estados/`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerAspectos: (dispatch) => {
+        let url = new URL(`/api/seleccionables/aspectos/`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    obtenerCarreras: (dispatch) => {
+        let url = new URL(`/api/seleccionables/carreras/`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    }
 }
-export const  = {
-
-}
-export const  = {
-
-}
-export const  = {
-
-}
-
-
-: () => {
-    return fetch(`${baseUrl}/api/`, getInit('')).then(res => res.json())
-}
-*/

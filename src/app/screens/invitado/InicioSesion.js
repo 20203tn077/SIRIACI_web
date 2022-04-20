@@ -3,7 +3,7 @@ import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstra
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
 import ListaCapsulas from '../../components/invitado/ListaCapsulas'
 import { mostrarMensaje } from '../../utils/Alert'
-import { Conexion } from '../../utils/Conexion'
+import { Acceso } from '../../utils/Conexion'
 import Input from '../../utils/Input'
 import { validarCampoObligatorio } from '../../utils/Validador'
 
@@ -37,7 +37,7 @@ export default function InicioSesion() {
         if (error) errores++
 
         if (errores == 0) {
-            Conexion.InicioSesion.iniciarSesion(dispatch, { correo, contrasena }).then((res) => {
+            Acceso.iniciarSesion(dispatch, { correo, contrasena }).then((res) => {
                 if (!res.error) {
                     dispatch({
                         tipo: 'INICIAR SESION',
@@ -57,14 +57,19 @@ export default function InicioSesion() {
                     <Card style={{ maxWidth: 640, borderRadius: 15 }} className='shadow-lg mx-auto'>
                         <Card.Body>
                             <Card.Title><h4 className='text-center'>Inicio de sesión</h4></Card.Title>
-                            <Form.Group className='mb-3'>
-                                <Input valorName='email' referencia={txtCorreo} nombre='Correo electrónico' error={errorCorreo} tipo='email' />
-                            </Form.Group>
+                            <Form noValidate onSubmit={(event) => {
+                                event.preventDefault()
+                                iniciarSesion()
+                            }}>
+                                <Form.Group className='mb-3'>
+                                    <Input valorName='email' referencia={txtCorreo} nombre='Correo electrónico' error={errorCorreo} tipo='email' />
+                                </Form.Group>
 
-                            <Form.Group className='mb-3'>
-                                <Input referencia={txtContrasena} nombre='Contraseña' error={errorContrasena} tipo='password' />
-                            </Form.Group>
-                            <Button variant='azul-light' onClick={iniciarSesion}>Iniciar sesión</Button>
+                                <Form.Group className='mb-3'>
+                                    <Input referencia={txtContrasena} nombre='Contraseña' error={errorContrasena} tipo='password' />
+                                </Form.Group>
+                                <Button variant='azul-light' type='submit'>Iniciar sesión</Button>
+                            </Form>
                         </Card.Body>
                     </Card>
                 </Col>

@@ -48,17 +48,16 @@ export const ValidacionesUsuario = {
         return null
     },
     validarApellido2: (apellido) => {
-        if (!apellido) return 'Debes ingresar un apellido.'
-        if (apellido === '') return null
+        if (!apellido) return null
         if (REGEX_CADENA_VACIA.test(apellido)) return 'Debes ingresar un apellido.'
         if (apellido.length > USUARIO_APELLIDO_MAX) return `Máximo ${USUARIO_APELLIDO_MAX} caracteres.`
         if (!REGEX_NOMBRE_VALIDO.test(apellido)) return 'Ingresa un apellido válido.'
         return null
     },
     validarCorreo: (correo) => {
-        if (isEmpty(correo)) return 'Debes ingresar un correo electrónico.'
+        if (isEmpty(correo)) return 'Debes ingresar una dirección de correo electrónico.'
         if (correo.length > USUARIO_CORREO_MAX) return `Máximo ${USUARIO_CORREO_MAX} caracteres.`
-        if (!REGEX_CORREO_VALIDO.test(correo)) return 'Ingresa un correo electrónico válido.'
+        if (!REGEX_CORREO_VALIDO.test(correo)) return 'Ingresa un correo válido.'
         return null
     },
     validarTelefono: (telefono) => {

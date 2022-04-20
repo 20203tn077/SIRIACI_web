@@ -1,17 +1,18 @@
 import React, { useContext, useRef, useState } from 'react'
-import { Badge, Button, Card, Col, Container, FormControl, Image, InputGroup, Nav, Row } from 'react-bootstrap'
-import { Conexion } from '../../utils/Conexion'
+import { Badge, Button, Card, Col, Form, FormControl, Image, InputGroup, Nav, Row } from 'react-bootstrap'
 import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 import { getFecha, getFechaYHora, getNombreCompleto } from '../../utils/Formateador'
 import { alertConsulta, alertEliminacion, mostrarMensaje } from '../../utils/Alert'
+import { CapsulasAdministrador } from '../../utils/Conexion'
 
 export default function ListaCapsulas() {
     const { dispatch } = useContext(AutenticacionContext)
     const [filtro, setFiltro] = useState(null)
     const [capsulas, setCapsulas] = useState([])
     const txtFiltro = useRef()
+    const btnAgregar = useRef()
 
     const columnas = [
         {
@@ -33,7 +34,7 @@ export default function ListaCapsulas() {
     }
 
     function eliminarCapsula(id) {
-        Conexion.CapsulasAdministrador.eliminarCapsula(dispatch, id).then((res) => {
+        CapsulasAdministrador.eliminarCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const capsulasActualizado = capsulas.map((capsula) => {
                     if (capsula.id === id) return { ...capsula, activo: false }
@@ -46,7 +47,7 @@ export default function ListaCapsulas() {
     }
 
     function consultarCapsula(id) {
-        Conexion.CapsulasAdministrador.obtenerCapsula(dispatch, id).then((res) => {
+        CapsulasAdministrador.obtenerCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const { titulo, fechaPublicacion, contenido, activo, imagenesCapsula } = res.datos
                 const datos = [
@@ -96,19 +97,27 @@ export default function ListaCapsulas() {
                     <Col>
                         <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Cápsulas informativas</Card.Title>
                     </Col>
+                    <Col md='auto' className='p-md-0'>
+                        <Form noValidate onSubmit={(event) => {
+                            event.preventDefault()
+                            buscar()
+                        }}>
+                            <InputGroup>
+                                <FormControl
+                                    ref={txtFiltro}
+                                    placeholder='Título'
+                                />
+                                <Button onClick={buscar} variant='verde'><Icon.Search /></Button>
+                            </InputGroup>
+                        </Form>
+                    </Col>
                     <Col md='auto'>
-                        <InputGroup>
-                            <FormControl
-                                ref={txtFiltro}
-                                placeholder='Título'
-                            />
-                            <Button onClick={buscar} variant='verde'><Icon.Search /></Button>
-                        </InputGroup>
+                        <Button ref={btnAgregar} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
                     </Col>
                 </Row>
             </Card.Header>
             <Card.Body>
-                <TablaInfinita onClickElemento={consultarCapsula} contenido={capsulas} setContenido={setCapsulas} filtro={filtro} numerada columnas={columnas} fuenteContenido={Conexion.CapsulasAdministrador.obtenerCapsulas} />
+                <TablaInfinita onClickElemento={consultarCapsula} contenido={capsulas} setContenido={setCapsulas} filtro={filtro} numerada columnas={columnas} fuenteContenido={CapsulasAdministrador.obtenerCapsulas} />
             </Card.Body>
         </Card>
 

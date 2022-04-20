@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import { Button, Card, Col, Row } from 'react-bootstrap'
 import { mostrarCapsula, mostrarMensaje } from '../../utils/Alert'
-import { Conexion } from '../../utils/Conexion'
+import { CapsulasPublico } from '../../utils/Conexion'
 import { getFecha } from '../../utils/Formateador'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 
 export default function Capsula({ datos: { id, titulo, imagenCapsula, contenido } }) {
     const { dispatch } = useContext(AutenticacionContext)
     function abrirCapsula() {
-        Conexion.CapsulasPublico.obtenerCapsula(dispatch, id).then((res) => {
+        CapsulasPublico.obtenerCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const { titulo, fechaPublicacion, contenido, imagenesCapsula } = res.datos
                 mostrarCapsula(titulo, getFecha(fechaPublicacion), contenido, imagenesCapsula)

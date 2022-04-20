@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Row, Spinner } from 'react-bootstrap' 
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { mostrarMensaje } from '../../utils/Alert'
-import { Conexion } from '../../utils/Conexion' 
+import { CapsulasPublico } from '../../utils/Conexion'
 import AutenticacionContext from '../autenticacion/AutenticacionContext' 
 import Capsula from './Capsula' 
 
@@ -15,7 +15,7 @@ export default function ListaCapsulas({ parent }) {
 
     useEffect(() => {
         setIsCargando(true)
-        Conexion.CapsulasPublico.obtenerCapsulas(dispatch, 1).then((res) => {
+        CapsulasPublico.obtenerCapsulas(dispatch, 1).then((res) => {
             const { datos: { content} } = res
             if (!res.error) {
                 setCapsulas(content)
@@ -29,7 +29,7 @@ export default function ListaCapsulas({ parent }) {
 
     function cargarCapsulas() {
         setIsCargando(true)
-        Conexion.CapsulasPublico.obtenerCapsulas(dispatch, pagina).then((res) => {
+        CapsulasPublico.obtenerCapsulas(dispatch, pagina).then((res) => {
             const { datos: { content, last } } = res
             if (!res.error) {
                 setCapsulas([...capsulas, ...content])

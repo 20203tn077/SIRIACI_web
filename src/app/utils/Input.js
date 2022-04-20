@@ -2,10 +2,10 @@ import React from 'react'
 import { Badge, Col, Form, Row } from 'react-bootstrap'
 
 export default function Input(props) {
-    const { nombre, referencia, error, placeholder, tipo, valorName, eventoInput, valorInicial, min, max, maxlength } = props
+    const { nombre, referencia, error, placeholder, tipo, valorName, eventoInput, valorInicial, min, max, maxlength, obligatorio} = props
     return (
         <>
-            {nombre ? <Form.Label>{nombre}:</Form.Label> : null}
+            {nombre ? <Form.Label>{nombre}:{obligatorio ? ' *' : null}</Form.Label> : null}
             <Form.Control onInput={eventoInput} name={valorName} ref={referencia} type={tipo} placeholder={placeholder} defaultValue={valorInicial} min={min} max={max} maxLength={maxlength} />
             {error ? <span className='error'>{error}</span> : null}
         </>
@@ -13,12 +13,12 @@ export default function Input(props) {
 }
 
 export function Select(props) {
-    const { nombre, referencia, error, opciones, valorInicial, eventoChange } = props
+    const { nombre, referencia, error, opciones, valorInicial, eventoChange, obligatorio } = props
     return (
         <>
-            {nombre ? <Form.Label>{nombre}:</Form.Label> : null}
+            {nombre ? <Form.Label>{nombre}:{obligatorio ? ' *' : null}</Form.Label> : null}
             <Form.Select onChange={eventoChange} ref={referencia} defaultValue={valorInicial}>
-                <option>Selecciona una opción...</option>
+                <option value=''>Selecciona una opción...</option>
                 {opciones.map((opcion, index) => (
                     <option key={index} value={opcion.id} >{opcion.nombre}</option>
                 ))}
@@ -51,6 +51,7 @@ export function Pill(props) {
                 </Col>
             </Row>
             {errorAdministrador ? <span className='error'>{errorAdministrador}</span> : null}
+            {errorAdministrador && errorResponsable ? <br/> : null}
             {errorResponsable ? <span className='error'>{errorResponsable}</span> : null}
         </>
     )

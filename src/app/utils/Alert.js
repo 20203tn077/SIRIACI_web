@@ -4,19 +4,20 @@ import withReactContent from 'sweetalert2-react-content'
 import Informacion from './Informacion'
 import Tema from './Tema'
 import * as Icon from 'react-feather'
-import Input from './Input'
 
 const Alert = withReactContent(Swal)
 export default Alert
 
 export function mostrarMensaje(titulo, texto, icono) {
-    Alert.fire({
+    return Alert.fire({
         title: titulo,
         text: texto,
         icon: icono,
         confirmButtonColor: Tema.verde,
     })
 }
+
+// 4853BM
 
 export function alertConsulta(datos, showModificar, showEliminar, titulo, subtitulo, botonModificar) {
     return Alert.fire({
@@ -65,6 +66,19 @@ export function alertModificacion(titulo, texto, icono) {
         title: titulo,
         text: texto,
         icon: icono,
+        confirmButtonColor: Tema.verde,
+    })
+}
+
+export function alertConfirmacion(titulo, texto, icono) {
+    return Alert.fire({
+        title: titulo,
+        text: texto,
+        icon: icono,
+        showCancelButton: true,
+        showConfirmButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Aceptar',
         confirmButtonColor: Tema.verde,
     })
 }

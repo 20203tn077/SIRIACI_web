@@ -42,5 +42,11 @@ export function getNombreCompleto(persona) {
     return nombre + ' ' + apellido1 + (apellido2 ? ' ' + apellido2 : '')
 }
 export function getUsuarioLista(usuario) {
-    
+    return {
+        id: 99,
+        nombre: getNombreCompleto(usuario),
+        correo: usuario.correo,
+        telefono: usuario.telefono,
+        activo: true
+    }
 }

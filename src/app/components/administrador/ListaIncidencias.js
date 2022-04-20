@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Badge, Button, Card, Col, Container, FormControl, Image, InputGroup, Nav, Row } from 'react-bootstrap'
-import { Conexion } from '../../utils/Conexion'
+import { Badge, Button, Card, Col, Container, Form, FormControl, Image, InputGroup, Nav, Row } from 'react-bootstrap'
 import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
@@ -8,6 +7,7 @@ import { getFecha, getFechaYHora, getNombreCompleto } from '../../utils/Formatea
 import Mapa from '../../utils/Mapa'
 import { alertConsulta, alertEliminacion, mostrarMensaje } from '../../utils/Alert'
 import { useParams } from 'react-router-dom'
+import { IncidenciasAdministrador } from '../../utils/Conexion'
 
 export default function ListaIncidencias() {
   const { dispatch } = useContext(AutenticacionContext)
@@ -66,7 +66,7 @@ export default function ListaIncidencias() {
   }
 
   function eliminarIncidencia(id) {
-    Conexion.IncidenciasAdministrador.eliminarIncidencia(dispatch, id).then((res) => {
+    IncidenciasAdministrador.eliminarIncidencia(dispatch, id).then((res) => {
       if (!res.error) {
         const incidenciasActualizado = incidencias.map(incidencia => {
           if (incidencia.id == id) return { ...incidencia, activo: false }
@@ -79,7 +79,7 @@ export default function ListaIncidencias() {
   }
 
   function consultarIncidencia(id) {
-    Conexion.IncidenciasAdministrador.obtenerIncidencia(dispatch, id).then((res) => {
+    IncidenciasAdministrador.obtenerIncidencia(dispatch, id).then((res) => {
       if (!res.error) {
         const { descripcion, tiempoIncidencia, aspecto: { nombre: aspecto }, importancia, estado, activo, latitud, longitud, comentario, imagenesIncidencia } = res.datos
 
@@ -171,18 +171,23 @@ export default function ListaIncidencias() {
             <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Incidencias</Card.Title>
           </Col>
           <Col md='auto'>
-            <InputGroup>
-              <FormControl
-                ref={txtFiltro}
-                placeholder='Descripción'
-              />
-              <Button onClick={buscar} variant='verde'><Icon.Search /></Button>
-            </InputGroup>
+            <Form noValidate onSubmit={(event) => {
+              event.preventDefault()
+              buscar()
+            }}>
+              <InputGroup>
+                <FormControl
+                  ref={txtFiltro}
+                  placeholder='Descripción'
+                />
+                <Button type='submit' variant='verde'><Icon.Search /></Button>
+              </InputGroup>
+            </Form>
           </Col>
         </Row>
       </Card.Header>
       <Card.Body>
-        <TablaInfinita onClickElemento={consultarIncidencia} contenido={incidencias} setContenido={setIncidencias} filtro={filtro} numerada columnas={columnas} fuenteContenido={Conexion.IncidenciasAdministrador.obtenerIncidencias} />
+        <TablaInfinita onClickElemento={consultarIncidencia} contenido={incidencias} setContenido={setIncidencias} filtro={filtro} numerada columnas={columnas} fuenteContenido={IncidenciasAdministrador.obtenerIncidencias} />
       </Card.Body>
     </Card>
 
