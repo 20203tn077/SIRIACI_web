@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Button, Card, Col, Row } from 'react-bootstrap'
-import { mostrarCapsula, mostrarMensaje } from '../../utils/Alert'
+import { alertConexion, alertError, mostrarCapsula, mostrarMensaje } from '../../utils/Alert'
 import { CapsulasPublico } from '../../utils/Conexion'
 import { getFecha } from '../../utils/Formateador'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
@@ -12,8 +12,8 @@ export default function Capsula({ datos: { id, titulo, imagenCapsula, contenido 
             if (!res.error) {
                 const { titulo, fechaPublicacion, contenido, imagenesCapsula } = res.datos
                 mostrarCapsula(titulo, getFecha(fechaPublicacion), contenido, imagenesCapsula)
-            } else mostrarMensaje('Error al obtener los registros', res.mensajeGeneral, 'error')
-        }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+            } else alertError(res, 'Error al obtener los datos de la cápsula')
+        }).catch(alertConexion)
     }
     return (
         <Col xs={12}>

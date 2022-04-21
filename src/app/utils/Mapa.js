@@ -21,7 +21,7 @@ export default function Mapa(props) {
 
     useEffect(() => {
         let L = window.L
-        L.mapquest.key = 'placeholder'
+        L.mapquest.key = 'bvihSynqZybWgEyzzM75GqIAplxwF5vJ'
 
         var map = L.mapquest.map('map', {
             center: [lat, lng],

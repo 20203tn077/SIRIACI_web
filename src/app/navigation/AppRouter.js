@@ -7,9 +7,12 @@ import NavAutenticado from './NavAutenticado'
 import NavInvitado from './NavInvitado'
 import IncidenciasAdministrador from '../screens/administrador/Incidencias'
 import CapsulasAdministrador from '../screens/administrador/Capsulas'
+import IncidenciasResponsable from '../screens/responsable/Incidencias'
+import CapsulasResponsable from '../screens/responsable/Capsulas'
 import Alert, { seleccionarRol } from '../utils/Alert'
 import None from '../screens/None'
 import Verificacion from '../screens/invitado/Verificacion'
+import Redirect from './Redirect'
 
 export default function AppRouter() {
     const { sesion: { autenticado, rolActivo, multiRol }, dispatch } = useContext(AutenticacionContext)
@@ -39,20 +42,20 @@ export default function AppRouter() {
                         {({
                             'ROLE_ADMINISTRADOR':
                                 <>
-                                    <Route path='/' element={<Usuarios />} />
+                                    <Route path='/' element={<Redirect/>} />
                                     <Route path='/usuarios' element={<Usuarios />} />
-                                    <Route path='/incidencias/:codigo' element={<IncidenciasAdministrador />} />
                                     <Route path='/incidencias' element={<IncidenciasAdministrador />} />
                                     <Route path='/capsulas' element={<CapsulasAdministrador />} />
                                 </>,
                             'ROLE_RESPONSABLE':
                                 <>
-                                    <Route path='/incidencias' element={<div>Holi</div>} />
-                                    <Route path='/capsulas' element={<div>Holi</div>} />
+                                    <Route path='/' element={<Redirect/>} />
+                                    <Route path='/incidencias' element={<IncidenciasResponsable/>} />
+                                    <Route path='/capsulas' element={<CapsulasResponsable/>} />
                                 </>
                         })[rolActivo] || null}
                     </> : <>
-                        <NavInvitado />
+                    <Route path='/' element={<div/>} />
                     </>}
                 </> : <>
                     <Route path='/' element={<InicioSesion />} />
@@ -60,8 +63,8 @@ export default function AppRouter() {
                     <Route path='/restablecer/verificar' element={<div>Restablecer contraseña</div>} />
                     <Route path='/restablecer/nueva' element={<div>Restablecer contraseña</div>} />
                 </>}
-                <Route path='/verificacion/' element={<Verificacion/>} />
-                <Route path='*' element={<None/>} />
+                <Route path='/verificacion/' element={<Verificacion />} />
+                <Route path='*' element={<None />} />
             </Routes>
         </Router>
     )

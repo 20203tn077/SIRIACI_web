@@ -13,7 +13,7 @@ export default function NavAutenticado() {
     return (
         <Navbar bg='azul-dark' expand='lg' variant='dark' className='sticky-top shadow'>
             <Container fluid>
-                <Navbar.Brand as={Link} to={`/${({'ROLE_ADMINISTRADOR': 'usuarios', 'ROLE_RESPONSABLE': 'incidencias'})[rolActivo]}`}><Image src={Logo} fluid style={{ height: 24 }} className='me-2' /><span style={{ verticalAlign: 'middle' }}>SIRIACI</span></Navbar.Brand>
+                <Navbar.Brand as={Link} to='/'><Image src={Logo} fluid style={{ height: 24 }} className='me-2' /><span style={{ verticalAlign: 'middle' }}>SIRIACI</span></Navbar.Brand>
                 <Navbar.Toggle aria-controls='basic-navbar-nav' />
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav className='me-auto'>

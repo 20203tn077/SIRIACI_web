@@ -7,7 +7,7 @@ import { getFecha, getFechaYHora, getNombreCompleto } from '../../utils/Formatea
 import Mapa from '../../utils/Mapa'
 import Alert, { alertAtender, alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
 import { useParams } from 'react-router-dom'
-import { IncidenciasAdministrador, Seleccionables } from '../../utils/Conexion'
+import { IncidenciasResponsable, Seleccionables } from '../../utils/Conexion'
 import { ListaImagenes } from '../../utils/Informacion'
 import { ValidacionesIncidencia } from '../../utils/Validador'
 import { TextArea } from '../../utils/Input'
@@ -65,32 +65,15 @@ export default function ListaIncidencias() {
           3: 'secondary'
         })[incidencia.estado.id]
       }>{incidencia.estado.nombre}</Badge>
-    },
-    {
-      nombre: 'Estado',
-      valor: (incidencia) => incidencia.activo ? <Badge bg='success'>Activo</Badge> : <Badge bg='secondary'>Inactivo</Badge>
-    },
+    }
   ]
 
   function buscar() {
     setFiltro(txtFiltro.current.value)
   }
 
-  function eliminarIncidencia(id) {
-    IncidenciasAdministrador.eliminarIncidencia(dispatch, id).then((res) => {
-      if (!res.error) {
-        const incidenciasActualizado = incidencias.map(incidencia => {
-          if (incidencia.id == id) return { ...incidencia, activo: false }
-          else return incidencia
-        })
-        setIncidencias(incidenciasActualizado)
-        alertExito(res)
-      } else alertError(res)
-    }).catch(alertConexion)
-  }
-
   function consultarIncidencia(id, codigo) {
-    (codigo ? IncidenciasAdministrador.obtenerIncidenciaPorCodigo : IncidenciasAdministrador.obtenerIncidencia)(dispatch, id ? id : codigo).then((res) => {
+    (codigo ? IncidenciasResponsable.obtenerIncidenciaPorCodigo : IncidenciasResponsable.obtenerIncidencia)(dispatch, id ? id : codigo).then((res) => {
       if (!res.error) {
         id = res.datos.id
         const { descripcion, tiempoIncidencia, aspecto: { nombre: aspecto }, importancia, estado, activo, latitud, longitud, comentario, imagenesIncidencia } = res.datos
@@ -141,25 +124,10 @@ export default function ListaIncidencias() {
           nombre: 'Comentario',
           valor: comentario
         })
-        datos = [
-          ...datos,
-          {
-            nombre: 'Estado',
-            valor: activo ? <Badge bg='success'>Activo</Badge> : <Badge bg='secondary'>Inactivo</Badge>
-          }
-        ]
 
         function consulta() {
-          alertConsulta(datos, activo && estado.id != 3, activo, descripcion, `Reportado por ${getNombreCompleto(res.datos.usuario)} el ${getFechaYHora(tiempoIncidencia)}.`, { texto: 'Atender', icono: <Icon.CheckCircle /> }).then((res) => {
-            if (res.isDenied) eliminacion()
+          alertConsulta(datos, activo && estado.id != 3, false, descripcion, `Reportado por ${getNombreCompleto(res.datos.usuario)} el ${getFechaYHora(tiempoIncidencia)}.`, { texto: 'Atender', icono: <Icon.CheckCircle /> }).then((res) => {
             if (res.isConfirmed) formularioAtencion()
-          })
-        }
-
-        function eliminacion() {
-          alertEliminacion('incidencia ambiental', <>la incidencia <b>{descripcion}</b></>).then((res) => {
-            if (res.isConfirmed) eliminarIncidencia(id)
-            if (res.isDismissed) consulta()
           })
         }
 
@@ -223,7 +191,7 @@ export default function ListaIncidencias() {
               numErrores++
             }
             if (numErrores == 0) {
-              IncidenciasAdministrador.antenderIncidencia(dispatch, id, datosIncidencia).then((res) => {
+              IncidenciasResponsable.antenderIncidencia(dispatch, id, datosIncidencia).then((res) => {
                 if (!res.error) {
                   let incidenciasActualizado = incidencias.map((incidencia) => {
                     if (incidencia.id == id) return { ...incidencia, estado: estados.find(estado => estado.id == incidencia.estado.id + 1) }
@@ -276,7 +244,7 @@ export default function ListaIncidencias() {
         </Row>
       </Card.Header>
       <Card.Body>
-        <TablaInfinita onClickElemento={consultarIncidencia} contenido={incidencias} setContenido={setIncidencias} filtro={filtro} numerada columnas={columnas} fuenteContenido={IncidenciasAdministrador.obtenerIncidencias} />
+        <TablaInfinita onClickElemento={consultarIncidencia} contenido={incidencias} setContenido={setIncidencias} filtro={filtro} numerada columnas={columnas} fuenteContenido={IncidenciasResponsable.obtenerIncidencias} />
       </Card.Body>
     </Card>
 

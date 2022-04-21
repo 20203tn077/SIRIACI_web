@@ -43,10 +43,21 @@ export function getNombreCompleto(persona) {
 }
 export function getUsuarioLista(usuario) {
     return {
-        id: 99,
+        id: usuario.id,
         nombre: getNombreCompleto(usuario),
         correo: usuario.correo,
         telefono: usuario.telefono,
         activo: true
     }
+}
+
+export const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+})
+
+export function getTexto(texto) {
+    return <>{texto.replace(' ', '&nbsp;').replace('\n', <br/>)}</>
 }

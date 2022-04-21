@@ -1,9 +1,10 @@
-import { Col, Form, Image, Row } from 'react-bootstrap'
+import { Col, Form, Image as ImageB, Row } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Informacion from './Informacion'
 import Tema from './Tema'
 import * as Icon from 'react-feather'
+import { TextArea } from './Input'
 
 const Alert = withReactContent(Swal)
 export default Alert
@@ -25,9 +26,9 @@ export function alertConsulta(datos, showModificar, showEliminar, titulo, subtit
         showCancelButton: true,
         showConfirmButton: showModificar,
         showDenyButton: showEliminar,
-        cancelButtonText: <><Icon.X/><span className='align-middle'> Cerrar</span></>,
-        confirmButtonText: botonModificar ? <>{botonModificar.icono}<span className='align-middle'> {botonModificar.texto}</span></> : <><Icon.Edit/><span className='align-middle'> Modificar</span></>,
-        denyButtonText: <><Icon.Trash2/><span className='align-middle'> Eliminar</span></>,
+        cancelButtonText: <><Icon.X /><span className='align-middle'> Cerrar</span></>,
+        confirmButtonText: botonModificar ? <>{botonModificar.icono}<span className='align-middle'> {botonModificar.texto}</span></> : <><Icon.Edit /><span className='align-middle'> Modificar</span></>,
+        denyButtonText: <><Icon.EyeOff /><span className='align-middle'> Desactivar</span></>,
         title: titulo,
         width: 800,
         html: (
@@ -57,16 +58,7 @@ export function alertConsulta(datos, showModificar, showEliminar, titulo, subtit
                 </Row>
             </>
         ),
-        confirmButtonColor: Tema.azul
-    })
-}
-
-export function alertModificacion(titulo, texto, icono) {
-    Alert.fire({
-        title: titulo,
-        text: texto,
-        icon: icono,
-        confirmButtonColor: Tema.verde,
+        confirmButtonColor: Tema.azulLight
     })
 }
 
@@ -85,13 +77,12 @@ export function alertConfirmacion(titulo, texto, icono) {
 
 export function alertEliminacion(tipo, elemento) {
     return Alert.fire({
-        title: `Eliminar ${tipo}`,
-        html: <>¿Estás seguro de eliminar {elemento}? Esta acción no se puede deshacer.</>,
+        title: `Desactivar ${tipo}`,
+        html: <>¿Estás seguro de desactivar {elemento}? Esta acción <b>no se puede deshacer</b>.</>,
         icon: 'warning',
         allowEnterKey: false,
         confirmButtonColor: '#dc3741',
         showCancelButton: true,
-        showConfirmButton: true,
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar'
     })
@@ -108,11 +99,11 @@ export function mostrarCapsula(titulo, fechaPublicacion, contenido, imagenesCaps
                     <hr />
                 </Col>
                 <Col xs='12' className='m-0'>
-                    <p className='m-0'>{contenido}</p>
+                    <Form.Label className='text-dark w-100 textoSalto'>{contenido}</Form.Label>
                 </Col>
                 {imagenesCapsula.map((imagen, index) => (
                     <Col xs={12} key={index}>
-                        <Image className='img-fluid rounded' src={`data:image/png;base64,${imagen.imagen}`} />
+                        <ImageB className='img-fluid rounded' src={`data:image/png;base64,${imagen.imagen}`} />
                     </Col>
                 ))}
             </Row>
@@ -160,4 +151,31 @@ export function seleccionarRol(dispatch, navigate, primeraVez) {
         })
         if (navigate) navigate('/')
     })
+}
+
+export function alertExito(res, texto) {
+    return mostrarMensaje(res.mensajeGeneral, texto, 'success')
+}
+export function alertError(res, texto) {
+    return mostrarMensaje(texto ? texto : 'No se pudo completar la acción', res.mensajeGeneral, 'error')
+}
+export function alertConexion() {
+    return mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error')
+}
+export function alertImagen(imagen, post, pre) {
+    const objImagen = new Image()
+    objImagen.src = imagen
+    objImagen.onload = () => {
+        if (pre) pre()
+        withReactContent(Swal).fire({
+            width: objImagen.width + 64,
+            html: <ImageB src={imagen} fluid />,
+            cancelButtonText: <><Icon.X /><span className='align-middle'> Cerrar</span></>,
+            showCancelButton: true,
+            showConfirmButton: false,
+            allowEnterKey: true
+        }).then((res) => {
+            if ((res.isConfirmed || res.isDismissed) && post) post()
+        })
+    }
 }

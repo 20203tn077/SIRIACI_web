@@ -1,6 +1,10 @@
 body {
     background-color: #f2f2f2;
-    padding: 0;
+    padding: 0;      
+}
+
+.textoSalto {
+    white-space: pre-line;
 }
 
 .gradient {
@@ -21,4 +25,23 @@ body {
 
 .bg-warning {
     color: #212529 !important;
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+    background-color: #343a40;
+    border: 5px solid #fff;
+    border-radius: 0.25rem;
+    opacity: 0;
+    transition: .1s ease;
+}
+.overlay-icon {
+    opacity: 0;
+}
+.overlay-container:hover .overlay {
+    opacity: 0.5;
+}
+.overlay-container:hover .overlay-icon{
+    opacity: 1;
 }

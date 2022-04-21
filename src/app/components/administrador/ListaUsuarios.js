@@ -4,7 +4,7 @@ import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 import { getNombreCompleto, getUsuarioLista } from '../../utils/Formateador'
-import Alert, { alertConfirmacion, alertConsulta, alertEliminacion, alertRegistrar, mostrarMensaje } from '../../utils/Alert'
+import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, alertRegistrar, mostrarMensaje } from '../../utils/Alert'
 import Tema from '../../utils/Tema'
 import Input, { Pill, Select } from '../../utils/Input'
 import { ValidacionesUsuario } from '../../utils/Validador'
@@ -81,14 +81,14 @@ export default function ListaUsuarios() {
   function registrarUsuario(usuario) {
     UsuariosAdministrador.registrarUsuario(dispatch, usuario).then((res) => {
       if (!res.error) {
-        mostrarMensaje('Registro realizado', 'El usuario ha sido registrado exitósamente. La cuenta debe verificarse para ser dada de alta en el sistema y permanecerá oculta hasta entonces.', 'success')
+        alertExito(res, 'Es necesario verificar la dirección de correo electrónico para dar de alta la cuenta.')
       } else {
         const errores = res.errores
-        mostrarMensaje('Error al registrasdar al usuario', res.mensajeGeneral, 'error').then((res) => {
+        alertError(res).then((res) => {
           if (res.isConfirmed) formularioRegistro(usuario, errores)
         })
       }
-    }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+    }).catch(alertConexion)
   }
 
   function formularioRegistro(datosUsuario, errores) {
@@ -412,7 +412,7 @@ export default function ListaUsuarios() {
                 />
               </Col>
             </Row>
-            <Row className='text-start w-100 mx-0 mt-2 mb-0'>
+            <Row className='text-start w-100 mx-0 mt-3 mb-0'>
               <Col><hr className='my-0' /></Col>
             </Row>
           </>
@@ -442,9 +442,9 @@ export default function ListaUsuarios() {
           else return usuario
         })
         setUsuarios(usuariosActualizado)
-        mostrarMensaje('Eliminación realizada', 'El usuario ha sido eliminado exitósamente.', 'success')
-      } else mostrarMensaje('Error al eliminar al usuario', res.mensajeGeneral, 'error')
-    }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+        alertExito(res)
+      } else alertError(res)
+    }).catch(alertConexion)
   }
 
   function consultarUsuario(id) {
@@ -511,9 +511,362 @@ export default function ListaUsuarios() {
           }
         ]
 
+        function modificarUsuario() {
+          const {id: temp_id, correo: temp_correo, nombre: temp_nombre, apellido1: temp_apellido1, apellido2: temp_apellido2, telefono: temp_telefono, estudiante: temp_estudiante, administrador: temp_administrador, responsable: temp_responsable } = res.datos
+          let datosOriginales = {
+            id: temp_id,
+            correo: temp_correo,
+            utez: ValidacionesUsuario.isCorreoInstitucional(temp_correo),
+            nombre: temp_nombre,
+            apellido1: temp_apellido1,
+            apellido2: temp_apellido2,
+            telefono: temp_telefono,
+            estudiante: temp_estudiante,
+            administrador: temp_administrador,
+            responsable: temp_responsable,
+          }
+          if (temp_estudiante) {
+            const { estudiante: { carrera: { id: temp_carrera, }, cuatrimestre: temp_cuatrimestre, grupo: temp_grupo } } = res.datos
+            datosOriginales = {
+              ...datosOriginales,
+              carrera: temp_carrera,
+              cuatrimestre: temp_cuatrimestre,
+              grupo: temp_grupo,
+            }
+          }
+
+          if (temp_responsable) {
+            const { responsable: { aspecto: { id: temp_aspecto } } } = res.datos
+            datosOriginales = {
+              ...datosOriginales,
+              aspecto: temp_aspecto
+            }
+          }
+
+          let datosUsuario = { ...datosOriginales }
+          let errores = {}
+          let selectCarreras
+          let carrerasFiltradas = []
+
+          function setAdministrador() {
+            if (datosUsuario.administrador) {
+              datosUsuario.administrador = false
+              txtAdministrador.current.className = 'badge bg-secondary'
+            } else {
+              datosUsuario.administrador = true
+              txtAdministrador.current.className = 'badge bg-verde'
+            }
+          }
+
+          function setResponsable() {
+            if (datosUsuario.responsable) {
+              datosUsuario.responsable = false
+              txtResponsable.current.className = 'badge bg-secondary'
+              contenedorAspecto.current.style.display = 'none'
+            } else {
+              datosUsuario.responsable = true
+              txtResponsable.current.className = 'badge bg-verde'
+              contenedorAspecto.current.style.display = 'block'
+            }
+          }
+
+          function comprobarDivision() {
+            guardar()
+            const objetos = carreras.find((division) => division.id == datosUsuario.division)
+            carrerasFiltradas = objetos ? objetos.carreras : []
+
+            try {
+              selectCarreras.unmount()
+            } catch (error) { }
+            selectCarreras = ReactDOM.createRoot(txtCarrera.current)
+            selectCarreras.render(
+              <>
+                <option value='' >Selecciona una opción...</option>
+                {carrerasFiltradas.map((opcion, index) => (
+                  <option key={index} value={opcion.id} >{opcion.nombre}</option>
+                ))}
+              </>
+            )
+          }
+
+          function guardar() {
+            datosUsuario.nombre = txtNombre.current.value
+            datosUsuario.apellido1 = txtApellido1.current.value
+            datosUsuario.apellido2 = txtApellido2.current.value
+            datosUsuario.telefono = txtTelefono.current.value
+            datosUsuario.contrasena = txtContrasena.current.value
+            datosUsuario.contrasena2 = txtContrasena2.current.value
+            datosUsuario.division = txtDivision.current.value
+            datosUsuario.carrera = txtCarrera.current.value ? txtCarrera.current.value : datosOriginales.carrera
+            datosUsuario.cuatrimestre = txtCuatrimestre.current.value
+            datosUsuario.grupo = txtGrupo.current.value.toUpperCase()
+            datosUsuario.aspecto = txtAspecto.current.value
+          }
+
+          function registro() {
+            errores = {}
+            let numErrores = 0
+            let numErroresEstudiante = 0
+            let numErroresResponsable = 0
+            let error
+            guardar()
+
+            error = ValidacionesUsuario.validarNombre(datosUsuario.nombre)
+            if (error) {
+              errores.nombre = error
+              numErrores++
+            }
+            error = ValidacionesUsuario.validarApellido1(datosUsuario.apellido1)
+            if (error) {
+              errores.apellido1 = error
+              numErrores++
+            }
+            error = ValidacionesUsuario.validarApellido2(datosUsuario.apellido2)
+            if (error) {
+              errores.apellido2 = error
+              numErrores++
+            }
+            error = ValidacionesUsuario.validarTelefono(datosUsuario.telefono)
+            if (error) {
+              errores.telefono = error
+              numErrores++
+            }
+            if (datosUsuario.contrasena) {
+              error = ValidacionesUsuario.validarContrasena(datosUsuario.contrasena)
+              if (error) {
+                errores.contrasena = error
+                numErrores++
+              }
+              error = ValidacionesUsuario.validarConfirmacionContrasena(datosUsuario.contrasena, datosUsuario.contrasena2)
+              if (error) {
+                errores.contrasena2 = error
+                numErrores++
+              }
+            }
+            error = !datosUsuario.carrera ? 'Debes seleccionar una carrera.' : null
+            if (error) {
+              errores.carrera = error
+              numErroresEstudiante++
+            }
+            error = ValidacionesUsuario.validarCuatrimestre(datosUsuario.cuatrimestre)
+            if (error) {
+              errores.cuatrimestre = error
+              numErroresEstudiante++
+            }
+            error = ValidacionesUsuario.validarGrupo(datosUsuario.grupo)
+            if (error) {
+              errores.grupo = error
+              numErroresEstudiante++
+            }
+            error = !datosUsuario.aspecto ? 'Debes seleccionar un aspecto ambiental.' : null
+            if (error) {
+              errores.aspecto = error
+              numErroresResponsable++
+            }
+
+            if (numErrores == 0 && (!datosUsuario.estudiante || numErroresEstudiante == 0) && (!datosUsuario.responsable || numErroresResponsable == 0)) {
+              const nuevosDatos = {}
+              if (datosUsuario.nombre != datosOriginales.nombre) nuevosDatos.nombre = datosUsuario.nombre
+              if (datosUsuario.apellido1 != datosOriginales.apellido1) nuevosDatos.apellido1 = datosUsuario.apellido1
+              if (datosUsuario.apellido2 != datosOriginales.apellido2) nuevosDatos.apellido2 = datosUsuario.apellido2
+              if (datosUsuario.telefono != datosOriginales.telefono) nuevosDatos.telefono = datosUsuario.telefono
+              if (datosUsuario.contrasena) {
+                if (datosUsuario.contrasena != datosOriginales.contrasena) nuevosDatos.contrasena = datosUsuario.contrasena
+              }
+              if (datosUsuario.estudiante) {
+                if (datosUsuario.carrera != datosOriginales.carrera) nuevosDatos.carrera = datosUsuario.carrera
+                if (datosUsuario.cuatrimestre != datosOriginales.cuatrimestre) nuevosDatos.cuatrimestre = datosUsuario.cuatrimestre
+                if (datosUsuario.grupo != datosOriginales.grupo) nuevosDatos.grupo = datosUsuario.grupo
+              }
+              if (datosUsuario.responsable) {
+                if (datosUsuario.aspecto != datosOriginales.aspecto) nuevosDatos.aspecto = datosUsuario.aspecto
+              }
+              if (datosUsuario.responsable != datosOriginales.responsable) nuevosDatos.responsable = datosUsuario.responsable
+              if (datosUsuario.administrador != datosOriginales.administrador) nuevosDatos.administrador = datosUsuario.administrador
+
+              UsuariosAdministrador.modificarUsuario(dispatch, id, nuevosDatos).then((res) => {
+                if (!res.error) {
+                  let usuariosActualizado = usuarios.map((usuario) => {
+                    if (usuario.id == id) return getUsuarioLista({ ...datosOriginales, ...nuevosDatos })
+                    else return usuario
+                  })
+                  setUsuarios(usuariosActualizado)
+                  alertExito(res)
+                } else alertError(res, 'Error al modificar los datos del usuario.')
+              }).catch(alertConexion)
+            }
+            else formulario()
+          }
+
+          function cancelacion() {
+            guardar()
+            alertConfirmacion('Cancelar modificación', '¿Deseas salir? Se perderán los cambios realizados.', 'warning').then((res) => {
+              if (res.isDismissed) formulario()
+              if (res.isConfirmed) consulta()
+            })
+          }
+
+          function formulario() {
+            Alert.fire({
+              html: (
+                <>
+                  <Row className='text-start w-100 m-0'>
+                    <Col><hr className='my-0' /></Col>
+                  </Row>
+                  <Row className='text-start w-100 m-0 g-3'>
+                    <Col xs='12' md='6'>
+                      <Input
+                        nombre='Nombre(s)'
+                        obligatorio
+                        referencia={txtNombre}
+                        error={errores.nombre}
+                        valorInicial={datosUsuario.nombre}
+                      />
+                    </Col>
+                    <Col xs='12' md='6'>
+                      <Input
+                        nombre='Primer apellido'
+                        obligatorio
+                        referencia={txtApellido1}
+                        error={errores.apellido1}
+                        valorInicial={datosUsuario.apellido1}
+                      />
+                    </Col>
+                    <Col xs='12' md='6'>
+                      <Input
+                        nombre='Segundo apellido'
+                        referencia={txtApellido2}
+                        error={errores.apellido2}
+                        valorInicial={datosUsuario.apellido2}
+                      />
+                    </Col>
+                    <Col xs='12' md='6'>
+                      <Input
+                        nombre='Telefono'
+                        obligatorio
+                        referencia={txtTelefono}
+                        error={errores.telefono}
+                        valorInicial={datosUsuario.telefono}
+                        tipo='tel'
+                      />
+                    </Col>
+                    <Col xs='12' md='6'>
+                      <Input
+                        nombre='Contraseña'
+                        obligatorio
+                        referencia={txtContrasena}
+                        error={errores.contrasena}
+                        valorInicial={datosUsuario.contrasena}
+                        tipo='password'
+                      />
+                    </Col>
+                    <Col xs='12' md='6'>
+                      <Input
+                        nombre='Confirmar contraseña'
+                        obligatorio
+                        referencia={txtContrasena2}
+                        error={errores.contrasena2}
+                        valorInicial={datosUsuario.contrasena2}
+                        tipo='password'
+                      />
+                    </Col>
+                    <Col xs='12' md='6' ref={contenedorDivision} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
+                      <Select
+                        nombre='División académica'
+                        obligatorio
+                        referencia={txtDivision}
+                        error={errores.division}
+                        opciones={carreras}
+                        valorInicial={datosUsuario.division}
+                        eventoChange={comprobarDivision}
+                      />
+                    </Col>
+                    <Col xs='12' md='6' ref={contenedorCarrera} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
+                      <Select
+                        nombre='Carrera'
+                        obligatorio
+                        referencia={txtCarrera}
+                        error={errores.carrera}
+                        opciones={carrerasFiltradas}
+                        valorInicial={datosUsuario.carrera}
+                      />
+                    </Col>
+                    <Col xs='12' md='6' ref={contenedorCuatrimestre} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
+                      <Input
+                        nombre='Cuatrimestre'
+                        obligatorio
+                        referencia={txtCuatrimestre}
+                        error={errores.cuatrimestre}
+                        valorInicial={datosUsuario.cuatrimestre}
+                        tipo='number'
+                        min='1'
+                        max='11'
+                      />
+                    </Col>
+                    <Col xs='12' md='6' ref={contenedorGrupo} style={{ display: datosUsuario.estudiante ? 'block' : 'none' }}>
+                      <Input
+                        nombre='Grupo'
+                        obligatorio
+                        referencia={txtGrupo}
+                        error={errores.grupo}
+                        valorInicial={datosUsuario.grupo}
+                        maxlength='1'
+                      />
+                    </Col>
+                    <Col xs='12' md='6' ref={contenedorAspecto} style={{ display: datosUsuario.responsable ? 'block' : 'none' }}>
+                      <Select
+                        nombre='Aspecto ambiental'
+                        obligatorio
+                        referencia={txtAspecto}
+                        error={errores.aspecto}
+                        opciones={aspectos}
+                        valorInicial={datosUsuario.aspecto}
+                      />
+                    </Col>
+                    <Col xs='12' md='6'>
+                      <Pill
+                        referenciaUtez={contenedorUtez}
+                        referenciaExterna={contenedorExterna}
+                        referenciaEstudiante={contenedorEstudiante}
+                        referenciaAdministrador={contenedorAdministrador}
+                        referenciaResponsable={contenedorResponsable}
+                        referenciaAdministradorB={txtAdministrador}
+                        referenciaResponsableB={txtResponsable}
+                        errorAdministrador={errores.administrador}
+                        errorResponsable={errores.responsable}
+                        valorInicial={datosUsuario}
+                        eventoAdministrador={setAdministrador}
+                        eventoResponsable={setResponsable}
+                        modificable
+                      />
+                    </Col>
+                  </Row>
+                  <Row className='text-start w-100 mx-0 mt-3 mb-0'>
+                    <Col><hr className='my-0' /></Col>
+                  </Row>
+                </>
+              ),
+              allowEnterKey: true,
+              showCancelButton: true,
+              showConfirmButton: true,
+              showDenyButton: false,
+              cancelButtonText: <><Icon.X /><span className='align-middle'> Cancelar</span></>,
+              confirmButtonText: <><Icon.Check /><span className='align-middle'> Registrar</span></>,
+              title: 'Modificar usuario',
+              width: 800,
+              confirmButtonColor: Tema.azul
+            }).then((res) => {
+              if (res.isConfirmed) registro()
+              if (res.isDismissed) cancelacion()
+            })
+          }
+          formulario()
+        }
+
         function consulta() {
           alertConsulta(datos, activo, activo, getNombreCompleto(res.datos)).then((res) => {
             if (res.isDenied) eliminacion()
+            if (res.isConfirmed) modificarUsuario()
           })
         }
         function eliminacion() {
@@ -524,8 +877,8 @@ export default function ListaUsuarios() {
         }
 
         consulta()
-      } else mostrarMensaje('Error al obtener los datos del usuario', res.mensajeGeneral, 'error')
-    }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+      } else alertError(res, 'Error al obtener los datos del usuario')
+    }).catch(alertConexion)
   }
 
   return (

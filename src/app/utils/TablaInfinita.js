@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Spinner, Table } from 'react-bootstrap'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AutenticacionContext from '../components/autenticacion/AutenticacionContext'
-import { mostrarMensaje } from './Alert'
+import { alertConexion, alertError, mostrarMensaje } from './Alert'
 
 export default function TablaInfinita(props) {
     const {contenido, setContenido, filtro, numerada, columnas, fuenteContenido, onClickElemento } = props
@@ -19,11 +19,11 @@ export default function TablaInfinita(props) {
             const { datos: { content, last, number } } = res
             if (!res.error) {
                 setContenido(content)
-            } else mostrarMensaje('Error al obtener los registros', res.mensajeGeneral, 'error')
+            } else alertError(res, 'Error al obtener los registros')
             setIsCargando(false)
         }).catch((error) => {
             setIsCargando(false)
-            mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error')
+            alertConexion()
         })
     }, [filtro])
 
@@ -35,11 +35,11 @@ export default function TablaInfinita(props) {
                 setContenido([...contenido, ...content])
                 setHasMore(!last)
                 setPagina(pagina + 1)
-            } else mostrarMensaje('Error al obtener los registros', res.mensajeGeneral, 'error')
+            } else alertError(res, 'Error al obtener los registros')
             setIsCargando(false)
         }).catch((error) => {
             setIsCargando(false)
-            mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error')
+            alertConexion()
         })
     }
 

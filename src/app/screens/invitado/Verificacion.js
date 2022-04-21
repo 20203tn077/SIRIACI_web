@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
 import NavInvitado from '../../navigation/NavInvitado'
-import { mostrarMensaje } from '../../utils/Alert'
+import { alertConexion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
 import { Verificacion as Conexion } from '../../utils/Conexion'
 
 export default function Verificacion() {
@@ -18,12 +18,12 @@ export default function Verificacion() {
             })
         } else {
             Conexion.verificarUsuario(dispatch, { correo, codigo }).then((res) => {
-                if (!res.error) mostrarMensaje('¡Cuenta verificada!', 'Tu cuenta ha sido verificada, ahora puedes iniciar sesión utilizando los datos que registraste.', 'success').then((res) => {
+                if (!res.error) alertExito(res, 'Puedes iniciar sesión utilizando el correo y contraseña que registraste.').then((res) => {
                     navigate('/')
                 })
-                else mostrarMensaje('Error al verificar la cuenta', res.mensajeGeneral, 'error').then((res) => {
+                else alertError(res, 'Error al verificar la cuenta').then((res) => {
                     navigate('/')
-                }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error')).then((res) => {
+                }).catch(() => alertConexion).then((res) => {
                     navigate('/')
                 })
             })

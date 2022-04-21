@@ -5,7 +5,7 @@ import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 import { getFecha, getFechaYHora, getNombreCompleto, getTexto, toBase64 } from '../../utils/Formateador'
 import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
-import { CapsulasAdministrador } from '../../utils/Conexion'
+import { CapsulasPublico, CapsulasResponsable } from '../../utils/Conexion'
 import Input, { InputImg, TextArea } from '../../utils/Input'
 import { ValidacionesCapsula } from '../../utils/Validador'
 import Tema from '../../utils/Tema'
@@ -44,7 +44,7 @@ export default function ListaCapsulas() {
     }
 
     function registrarCapsula(capsula) {
-        CapsulasAdministrador.registrarCapsula(dispatch, capsula).then((res) => {
+        CapsulasResponsable.registrarCapsula(dispatch, capsula).then((res) => {
             if (!res.error) {
                 setKeyLista(!keyLista)
                 alertExito(res)
@@ -198,7 +198,7 @@ export default function ListaCapsulas() {
     }
 
     function eliminarCapsula(id) {
-        CapsulasAdministrador.eliminarCapsula(dispatch, id).then((res) => {
+        CapsulasResponsable.eliminarCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const capsulasActualizado = capsulas.map((capsula) => {
                     if (capsula.id === id) return { ...capsula, activo: false }
@@ -211,7 +211,7 @@ export default function ListaCapsulas() {
     }
 
     function consultarCapsula(id) {
-        CapsulasAdministrador.obtenerCapsula(dispatch, id).then((res) => {
+        CapsulasPublico.obtenerCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const { titulo, fechaPublicacion, contenido, activo, imagenesCapsula } = res.datos
                 const datos = [
@@ -326,7 +326,7 @@ export default function ListaCapsulas() {
                             if (datosCapsula.contenido != datosOriginales.contenido) nuevosDatos.contenido = datosCapsula.contenido
                             nuevosDatos.imagenesCapsula = [...datosCapsula.imagenesCapsula.filter((imagen => !imagen.id)), ...imagenesEliminar]
 
-                            CapsulasAdministrador.modificarCapsula(dispatch, id, nuevosDatos).then((res) => {
+                            CapsulasResponsable.modificarCapsula(dispatch, id, nuevosDatos).then((res) => {
                                 if (!res.error) {
                                     if (nuevosDatos.titulo) {
                                         const capsulasActualizado = capsulas.map((capsula) => {
@@ -441,7 +441,7 @@ export default function ListaCapsulas() {
                 </Row>
             </Card.Header>
             <Card.Body>
-                <TablaInfinita key={keyLista} onClickElemento={consultarCapsula} contenido={capsulas} setContenido={setCapsulas} filtro={filtro} numerada columnas={columnas} fuenteContenido={CapsulasAdministrador.obtenerCapsulas} />
+                <TablaInfinita key={keyLista} onClickElemento={consultarCapsula} contenido={capsulas} setContenido={setCapsulas} filtro={filtro} numerada columnas={columnas} fuenteContenido={CapsulasResponsable.obtenerCapsulas} />
             </Card.Body>
         </Card>
 

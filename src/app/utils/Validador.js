@@ -103,8 +103,7 @@ export const ValidacionesIncidencia = {
         return null
     },
     validarComentario: (comentario) => {
-        if (!comentario) return 'Debes ingresar un comentario.'
-        if (comentario === '') return null
+        if (!comentario) return null
         if (REGEX_CADENA_VACIA.test(comentario)) return 'Debes ingresar un comentario.'
         if (comentario.length > INCIDENCIA_COMENTARIO_MAX) return  `Máximo ${INCIDENCIA_COMENTARIO_MAX} caracteres.`
         return null

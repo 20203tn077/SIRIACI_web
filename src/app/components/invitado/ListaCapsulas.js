@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Row, Spinner } from 'react-bootstrap' 
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { mostrarMensaje } from '../../utils/Alert'
+import { alertConexion, alertError, mostrarMensaje } from '../../utils/Alert'
 import { CapsulasPublico } from '../../utils/Conexion'
 import AutenticacionContext from '../autenticacion/AutenticacionContext' 
 import Capsula from './Capsula' 
@@ -19,11 +19,11 @@ export default function ListaCapsulas({ parent }) {
             const { datos: { content} } = res
             if (!res.error) {
                 setCapsulas(content)
-            } else mostrarMensaje('Error al obtener las cápsulas', res.mensajeGeneral, 'error')
+            } else alertError(res, 'Error al obtener las cápsulas')
             setIsCargando(false)
         }).catch((error) => {
             setIsCargando(false)
-            .catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+            .catch(alertConexion)
         })
     }, [])
 
@@ -35,11 +35,11 @@ export default function ListaCapsulas({ parent }) {
                 setCapsulas([...capsulas, ...content])
                 setHasMore(!last)
                 setPagina(pagina + 1)
-            } else mostrarMensaje('Error al obtener las cápsulas', res.mensajeGeneral, 'error')
+            } else alertError(res, 'Error al obtener las cápsulas')
             setIsCargando(false)
         }).catch((error) => {
             setIsCargando(false)
-            .catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+            .catch(alertConexion)
         })
     }
 

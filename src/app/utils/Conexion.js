@@ -1,6 +1,6 @@
 import { mostrarLoader, mostrarMensaje } from "./Alert"
 
-//const baseUrl = 'https://siriaci-service.azurewebsites.net'
+// const baseUrl = 'https://siriaci-service.azurewebsites.net'
 const baseUrl = 'http://localhost:8080'
 
 function getInit(metodo, datos) {
@@ -61,7 +61,7 @@ export const UsuariosAdministrador = {
     modificarUsuario: (dispatch, id, usuario) => {
         mostrarLoader()
         let url = new URL(`/api/administrador/usuarios/${id}`, baseUrl)
-        return fetch(url, getInit('PATCH')).then((res) => validarPeticion(dispatch, res))
+        return fetch(url, getInit('PATCH', usuario)).then((res) => validarPeticion(dispatch, res))
     },
     eliminarUsuario: (dispatch, id) => {
         mostrarLoader()
@@ -83,13 +83,14 @@ export const IncidenciasAdministrador = {
     },
     obtenerIncidenciaPorCodigo: (dispatch, codigo) => {
         mostrarLoader()
-        let url = new URL(`/api/administrador/incidencias/codigo/${codigo}`, baseUrl)
+        let url = new URL(`/api/administrador/incidencias/codigo/`, baseUrl)
+        url.searchParams.set('codigo', codigo)
         return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
     },
     antenderIncidencia: (dispatch, id, datos) => {
         mostrarLoader()
         let url = new URL(`/api/administrador/incidencias/${id}`, baseUrl)
-        return fetch(url, getInit('PATCH')).then((res) => validarPeticion(dispatch, res))
+        return fetch(url, getInit('PATCH', datos)).then((res) => validarPeticion(dispatch, res))
     },
     eliminarIncidencia: (dispatch, id) => {
         mostrarLoader()
@@ -111,13 +112,14 @@ export const IncidenciasResponsable = {
     },
     obtenerIncidenciaPorCodigo: (dispatch, codigo) => {
         mostrarLoader()
-        let url = new URL(`/api/responsable/incidencias/codigo/${codigo}`, baseUrl)
+        let url = new URL(`/api/responsable/incidencias/codigo/`, baseUrl)
+        url.searchParams.set('codigo', codigo)
         return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
     },
     antenderIncidencia: (dispatch, id, datos) => {
         mostrarLoader()
         let url = new URL(`/api/responsable/incidencias/${id}`, baseUrl)
-        return fetch(url, getInit('PATCH')).then((res) => validarPeticion(dispatch, res))
+        return fetch(url, getInit('PATCH', datos)).then((res) => validarPeticion(dispatch, res))
     },
 }
 export const CapsulasAdministrador = {

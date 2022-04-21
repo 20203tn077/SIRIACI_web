@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap'
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
 import ListaCapsulas from '../../components/invitado/ListaCapsulas'
-import { mostrarMensaje } from '../../utils/Alert'
+import { alertConexion, alertError, mostrarMensaje } from '../../utils/Alert'
 import { Acceso } from '../../utils/Conexion'
 import Input from '../../utils/Input'
 import { validarCampoObligatorio } from '../../utils/Validador'
@@ -44,9 +44,9 @@ export default function InicioSesion() {
                         datos: res.datos
                     })
                 } else {
-                    mostrarMensaje('Inicio de sesión fallido', res.mensajeGeneral, 'error')
+                    alertError(res, 'Inicio de sesión fallido')
                 }
-            }).catch((error) => mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error'))
+            }).catch(alertConexion)
         }
     }
 
