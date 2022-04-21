@@ -1,7 +1,7 @@
 import { mostrarLoader, mostrarMensaje } from "./Alert"
 
-// const baseUrl = 'https://siriaci-service.azurewebsites.net'
-const baseUrl = 'http://localhost:8080'
+const baseUrl = 'https://siriaci-service.azurewebsites.net'
+// const baseUrl = 'http://localhost:8080'
 
 function getInit(metodo, datos) {
     const sesion = JSON.parse(localStorage.getItem('sesion')) || null
