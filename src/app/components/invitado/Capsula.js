@@ -16,7 +16,7 @@ export default function Capsula({ datos: { id, titulo, imagenCapsula, contenido 
         }).catch(alertConexion)
     }
     return (
-        <Col xs={12}>
+        <Col xs={12} className='p-0 p-md-4'>
             <Card style={{ maxWidth: 640, borderRadius: 15 }} className='shadow mx-auto'>
                 <Row className='g-0'>
                     <Col>

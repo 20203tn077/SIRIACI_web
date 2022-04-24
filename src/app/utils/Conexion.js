@@ -22,6 +22,7 @@ function validarPeticion(dispatch, respuesta) {
     } else if (respuesta.status == 403 || respuesta.status == 401) {
         dispatch({ tipo: 'CERRAR SESION' })
         mostrarMensaje('Sesión caducada', 'La sesión ha caducado, vuelve a iniciar sesión.', 'info')
+        return respuesta.json()
     } else {
         mostrarMensaje('Error de servidor', 'Ha ocurrido un error desconocido, vuelve a intentarlo más tarde.', 'error')
     }

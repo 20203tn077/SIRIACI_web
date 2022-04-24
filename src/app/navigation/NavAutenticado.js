@@ -23,7 +23,7 @@ export default function NavAutenticado() {
                     </Nav>
                     <Nav className='d-flex'>
                         <NavDropdown title={correo} active>
-                            <NavDropdown.Item to={'/perfil'} as={Link}><Icon.User size={18} className='me-2' /><span style={{ verticalAlign: 'middle' }}>Perfíl</span></NavDropdown.Item>
+                            {/* <NavDropdown.Item to={'/perfil'} as={Link}><Icon.User size={18} className='me-2' /><span style={{ verticalAlign: 'middle' }}>Perfíl</span></NavDropdown.Item> */}
                             {multiRol ? <NavDropdown.Item onClick={() => { seleccionarRol(dispatch, navigate) }}><Icon.ToggleLeft size={18} className='me-2' /><span style={{ verticalAlign: 'middle' }}>Cambiar rol</span></NavDropdown.Item> : null}
                             <NavDropdown.Item onClick={() => {
                                 dispatch({ tipo: 'CERRAR SESION' })

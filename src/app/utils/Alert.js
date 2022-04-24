@@ -160,7 +160,7 @@ export function alertError(res, texto) {
     return mostrarMensaje(texto ? texto : 'No se pudo completar la acción', res.mensajeGeneral, 'error')
 }
 export function alertConexion() {
-    return mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error')
+    //return mostrarMensaje('Error de conexión', 'No fue posible establecer conexión con el servidor.', 'error')
 }
 export function alertImagen(imagen, post, pre) {
     const objImagen = new Image()

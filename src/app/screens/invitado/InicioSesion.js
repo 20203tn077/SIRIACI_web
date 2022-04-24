@@ -51,9 +51,8 @@ export default function InicioSesion() {
     }
 
     return (
-        <div className='w-100'>
-            <Row className='g-4 g-md-0 w-100 m-0'>
-                <Col xs={12} md={6}>
+        <Row className='gx-0'>
+            <Col xs={12} md={6} style={{ marginTop: 60 }}>
                     <Card style={{ maxWidth: 640, borderRadius: 15 }} className='shadow-lg mx-auto'>
                         <Card.Body>
                             <Card.Title><h4 className='text-center'>Inicio de sesión</h4></Card.Title>
@@ -72,12 +71,10 @@ export default function InicioSesion() {
                             </Form>
                         </Card.Body>
                     </Card>
-                </Col>
-                <Col xs={12} md={6}>
-                    <ListaCapsulas />
-                </Col>
-            </Row>
-        </div>
-
+            </Col>
+            <Col xs={12} md={6}>
+                <ListaCapsulas />
+            </Col>
+        </Row>
     )
 }
