@@ -46,17 +46,17 @@ export default function ListaCapsulas({ parent }) {
     return (
         <>
             <Row as={InfiniteScroll}
-                className='g-3 w-100 py-3 m-0'
+                className='g-3 w-100 p-3 m-0'
                 hasMore={hasMore}
                 dataLength={capsulas.length}
                 next={cargarCapsulas}
             >
-                <h4 className='text-white mb-0 text-center'>Cápsulas informativas</h4>
+                <h4 className='text-white mt-1 mb-0 text-center'>Cápsulas informativas</h4>
                 {capsulas.map((capsula, index) => (
                     <Capsula key={index} datos={capsula} />
                 ))}
             </Row>
-            {isCargando ? <div className='w-100 text-center mb-4'><Spinner variant='white' animation='border' /></div> : null}
+            {isCargando ? <div className='w-100 text-center mt-2 mb-4'><Spinner variant='white' animation='border' /></div> : null}
         </>
 
     )

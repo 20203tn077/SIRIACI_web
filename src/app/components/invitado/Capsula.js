@@ -16,11 +16,11 @@ export default function Capsula({ datos: { id, titulo, imagenCapsula, contenido 
         }).catch(alertConexion)
     }
     return (
-        <Col xs={12} className='p-0 p-md-4'>
-            <Card style={{ maxWidth: 640, borderRadius: 15 }} className='shadow mx-auto'>
+        <Col xs={12} className='p-0'>
+            <Card style={{ maxWidth: 640, borderRadius: 15, borderWidth: 0 }} className='shadow mx-auto'>
                 <Row className='g-0'>
                     <Col>
-                        <Card.Body style={{ textAlign: 'center' }}>
+                        <Card.Body style={{ textAlign: 'center', alignContent: 'center' }}>
                             <Card.Title>{titulo}</Card.Title>
                             <Card.Text>
                                 {contenido}

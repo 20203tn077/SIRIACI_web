@@ -184,8 +184,8 @@ export default function ListaCapsulas() {
                 showCancelButton: true,
                 showConfirmButton: true,
                 showDenyButton: false,
-                cancelButtonText: <><Icon.X /><span className='align-middle'> Cancelar</span></>,
-                confirmButtonText: <><Icon.Check /><span className='align-middle'> Registrar</span></>,
+                cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
+                confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Registrar</span></>,
                 title: 'Nueva cápsula informativa',
                 width: 800,
                 confirmButtonColor: Tema.azul
@@ -214,17 +214,20 @@ export default function ListaCapsulas() {
         CapsulasAdministrador.obtenerCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const { titulo, fechaPublicacion, contenido, activo, imagenesCapsula } = res.datos
-                const datos = [
+                let datos = [
                     {
                         nombre: 'Contenido',
                         doble: true,
                         valor: <span className='textoSalto'>{contenido}</span>
-                    },
-                    {
-                        nombre: 'Imagenes',
-                        doble: true,
-                        valor: <ListaImagenes eventoPostImagen={consulta} imagenes={imagenesCapsula} />
-                    },
+                    }                    
+                ]
+                if (imagenesCapsula.length > 0) datos.push({
+                    nombre: 'Imagenes',
+                    doble: true,
+                    valor: <ListaImagenes eventoPostImagen={consulta} imagenes={imagenesCapsula} />
+                })
+                datos = [
+                    ...datos,
                     {
                         nombre: 'Estado',
                         valor: activo ? <Badge bg='success'>Activo</Badge> : <Badge bg='secondary'>Inactivo</Badge>
@@ -252,7 +255,8 @@ export default function ListaCapsulas() {
                     let imagenesDOM
         
                     function eliminarImagen(indice) {
-                        let imgEliminar = imagenesCapsula[indice]
+                        let imgEliminar = datosCapsula.imagenesCapsula[indice]
+                        console.log(imgEliminar.id ? "asd" : "fgh");
                         if (imgEliminar.id) imagenesEliminar.push({id: imgEliminar.id})
                         datosCapsula.imagenesCapsula.splice(indice, 1)
                         try {
@@ -398,8 +402,8 @@ export default function ListaCapsulas() {
                             showCancelButton: true,
                             showConfirmButton: true,
                             showDenyButton: false,
-                            cancelButtonText: <><Icon.X /><span className='align-middle'> Cancelar</span></>,
-                            confirmButtonText: <><Icon.Check /><span className='align-middle'> Registrar</span></>,
+                            cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
+                            confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Registrar</span></>,
                             title: 'Modificar cápsula informativa',
                             width: 800,
                             confirmButtonColor: Tema.azul

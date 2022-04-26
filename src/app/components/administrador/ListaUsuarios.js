@@ -421,8 +421,8 @@ export default function ListaUsuarios() {
         showCancelButton: true,
         showConfirmButton: true,
         showDenyButton: false,
-        cancelButtonText: <><Icon.X /><span className='align-middle'> Cancelar</span></>,
-        confirmButtonText: <><Icon.Check /><span className='align-middle'> Registrar</span></>,
+        cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
+        confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Registrar</span></>,
         title: 'Nuevo usuario',
         width: 800,
         confirmButtonColor: Tema.azul
@@ -850,8 +850,8 @@ export default function ListaUsuarios() {
               showCancelButton: true,
               showConfirmButton: true,
               showDenyButton: false,
-              cancelButtonText: <><Icon.X /><span className='align-middle'> Cancelar</span></>,
-              confirmButtonText: <><Icon.Check /><span className='align-middle'> Registrar</span></>,
+              cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
+              confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Registrar</span></>,
               title: 'Modificar usuario',
               width: 800,
               confirmButtonColor: Tema.azul

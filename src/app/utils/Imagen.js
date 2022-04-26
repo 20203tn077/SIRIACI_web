@@ -14,7 +14,7 @@ export default function Imagen(props) {
             {eventoEliminar ?
                 <Icon.Trash2 className='overlay-icon position-absolute top-50 start-50 translate-middle fw-bold text-white' size={30} />
                 :
-                <Icon.Eye className='overlay-icon position-absolute top-50 start-50 translate-middle fw-bold text-white' size={30} />
+                <Icon.Maximize2 className='overlay-icon position-absolute top-50 start-50 translate-middle fw-bold text-white' size={30} />
             }
         </div >
     )

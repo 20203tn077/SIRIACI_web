@@ -10,8 +10,7 @@ body {
 }
 
 .gradient {
-    background: rgb(2, 0, 36);
-    background: linear-gradient(to left, #043F88, #00B185);
+    background: linear-gradient(45deg , #043F88, #01A38B);
 }
 
 .error {

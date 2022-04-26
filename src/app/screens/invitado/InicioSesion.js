@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
 import ListaCapsulas from '../../components/invitado/ListaCapsulas'
 import { alertConexion, alertError, mostrarMensaje } from '../../utils/Alert'
 import { Acceso } from '../../utils/Conexion'
 import Input from '../../utils/Input'
+import * as Icon from 'react-feather'
 import { validarCampoObligatorio } from '../../utils/Validador'
 
 export default function InicioSesion() {
@@ -52,27 +54,30 @@ export default function InicioSesion() {
 
     return (
         <Row className='gx-0'>
-            <Col xs={12} md={6} style={{ marginTop: 60 }}>
-                    <Card style={{ maxWidth: 640, borderRadius: 15 }} className='shadow-lg mx-auto'>
-                        <Card.Body>
-                            <Card.Title><h4 className='text-center'>Inicio de sesión</h4></Card.Title>
-                            <Form noValidate onSubmit={(event) => {
-                                event.preventDefault()
-                                iniciarSesion()
-                            }}>
-                                <Form.Group className='mb-3'>
-                                    <Input valorName='email' referencia={txtCorreo} nombre='Correo electrónico' error={errorCorreo} tipo='email' />
-                                </Form.Group>
+            <Col xs={12} md={6} xl={4} className='bg-light shadow-lg' style={{ minHeight: '120vh' }}>
+                <div style={{ maxWidth: 640, position: 'sticky', top: '30%' }} className='mx-auto p-5'>
+                    <h4 className='text-center'>Inicio de sesión</h4>
+                    <Form noValidate onSubmit={(event) => {
+                        event.preventDefault()
+                        iniciarSesion()
+                    }}>
+                        <Form.Group className='mb-3'>
+                            <Input valorName='email' referencia={txtCorreo} nombre='Correo electrónico' error={errorCorreo} tipo='email' />
+                        </Form.Group>
 
-                                <Form.Group className='mb-3'>
-                                    <Input referencia={txtContrasena} nombre='Contraseña' error={errorContrasena} tipo='password' />
-                                </Form.Group>
-                                <Button variant='azul-light' type='submit'>Iniciar sesión</Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
+                        <Form.Group className='mb-3'>
+                            <Input referencia={txtContrasena} nombre='Contraseña' error={errorContrasena} tipo='password' />
+                        </Form.Group>
+                        <Form.Group className='mb-2'>
+                            <Button className='w-100' variant='azul-light' type='submit'><Icon.LogIn size={20} className='me-2' /><span className='align-middle'>Iniciar sesión</span></Button>
+                        </Form.Group>
+                        <Form.Group >
+                            <Form.Text><Link className='text-muted' to={'/restablecimiento/solicitud'}>¿Olvidaste tu contraseña?</Link></Form.Text>
+                        </Form.Group>
+                    </Form>
+                </div>
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={6} xl={8}>
                 <ListaCapsulas />
             </Col>
         </Row>

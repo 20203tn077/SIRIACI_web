@@ -209,3 +209,20 @@ export const Seleccionables = {
         return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
     }
 }
+export const Restablecimiento = {
+    registrarSolicitud: (dispatch, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/restablecimiento/`, baseUrl)
+        return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
+    },
+    validarCodigo: (dispatch, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/restablecimiento/`, baseUrl)
+        return fetch(url, getInit('PATCH', datos)).then((res) => validarPeticion(dispatch, res))
+    },
+    restablecerContrasena: (dispatch, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/restablecimiento/`, baseUrl)
+        return fetch(url, getInit('PATCH', datos)).then((res) => validarPeticion(dispatch, res))
+    },
+}

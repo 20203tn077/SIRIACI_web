@@ -150,7 +150,7 @@ export default function ListaIncidencias() {
         ]
 
         function consulta() {
-          alertConsulta(datos, activo && estado.id != 3, activo, descripcion, `Reportado por ${getNombreCompleto(res.datos.usuario)} el ${getFechaYHora(tiempoIncidencia)}.`, { texto: 'Atender', icono: <Icon.CheckCircle /> }).then((res) => {
+          alertConsulta(datos, activo && estado.id != 3, activo, descripcion, `Reportado por ${getNombreCompleto(res.datos.usuario)} el ${getFechaYHora(tiempoIncidencia)}.`, { texto: 'Atender', icono: <Icon.CheckSquare size={20} className='me-2' /> }).then((res) => {
             if (res.isDenied) eliminacion()
             if (res.isConfirmed) formularioAtencion()
           })
@@ -175,8 +175,8 @@ export default function ListaIncidencias() {
             const nuevoEstado = estados.find(a => a.id == estado.id + 1)
             Alert.fire({
               showCancelButton: true,
-              cancelButtonText: <><Icon.X /><span className='align-middle'> Cancelar</span></>,
-              confirmButtonText: <><Icon.Check /><span className='align-middle'> Guardar</span></>,
+              cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
+              confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Guardar</span></>,
               title: 'Atender incidencia ambiental',
               width: 800,
               html: (

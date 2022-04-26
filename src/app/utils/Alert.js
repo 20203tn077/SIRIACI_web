@@ -26,9 +26,9 @@ export function alertConsulta(datos, showModificar, showEliminar, titulo, subtit
         showCancelButton: true,
         showConfirmButton: showModificar,
         showDenyButton: showEliminar,
-        cancelButtonText: <><Icon.X /><span className='align-middle'> Cerrar</span></>,
-        confirmButtonText: botonModificar ? <>{botonModificar.icono}<span className='align-middle'> {botonModificar.texto}</span></> : <><Icon.Edit /><span className='align-middle'> Modificar</span></>,
-        denyButtonText: <><Icon.EyeOff /><span className='align-middle'> Desactivar</span></>,
+        cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cerrar</span></>,
+        confirmButtonText: botonModificar ? <>{botonModificar.icono}<span className='align-middle'>{botonModificar.texto}</span></> : <><Icon.Edit size={20} className='me-2' /><span className='align-middle'>Modificar</span></>,
+        denyButtonText: <><Icon.EyeOff size={20} className='me-2' /><span className='align-middle'>Desactivar</span></>,
         title: titulo,
         width: 800,
         html: (
@@ -170,7 +170,7 @@ export function alertImagen(imagen, post, pre) {
         withReactContent(Swal).fire({
             width: objImagen.width + 64,
             html: <ImageB src={imagen} fluid />,
-            cancelButtonText: <><Icon.X /><span className='align-middle'> Cerrar</span></>,
+            cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cerrar</span></>,
             showCancelButton: true,
             showConfirmButton: false,
             allowEnterKey: true
