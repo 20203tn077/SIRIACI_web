@@ -26,6 +26,9 @@ export default function ListaCapsulas({ parent }) {
             .catch(alertConexion)
         })
     }, [])
+    useEffect(() => {
+        if (!isCargando && hasMore && document.documentElement.scrollHeight <= document.documentElement.clientHeight) cargarCapsulas()
+    },[isCargando])
 
     function cargarCapsulas() {
         setIsCargando(true)

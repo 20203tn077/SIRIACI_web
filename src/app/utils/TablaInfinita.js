@@ -5,20 +5,20 @@ import AutenticacionContext from '../components/autenticacion/AutenticacionConte
 import { alertConexion, alertError, mostrarMensaje } from './Alert'
 
 export default function TablaInfinita(props) {
-    const {contenido, setContenido, filtro, numerada, columnas, fuenteContenido, onClickElemento } = props
+    const { contenido, setContenido, filtro, numerada, columnas, fuenteContenido, onClickElemento } = props
 
-    const {dispatch} = useContext(AutenticacionContext)
-    const [isCargando, setIsCargando] = useState(false)
+    const { dispatch } = useContext(AutenticacionContext)
+    const [isCargando, setIsCargando] = useState(true)
     const [hasMore, setHasMore] = useState(true)
     const [pagina, setPagina] = useState(2)
 
     useEffect(() => {
         setContenido([])
-        setIsCargando(true)
         fuenteContenido(dispatch, 1, filtro ? filtro : null).then((res) => {
-            const { datos: { content, last, number } } = res
+            const { datos: { content, last } } = res
             if (!res.error) {
                 setContenido(content)
+                setHasMore(!last)
             } else alertError(res, 'Error al obtener los registros')
             setIsCargando(false)
         }).catch((error) => {
@@ -26,11 +26,14 @@ export default function TablaInfinita(props) {
             alertConexion()
         })
     }, [filtro])
+    useEffect(() => {
+        if (!isCargando && hasMore && document.documentElement.scrollHeight <= document.documentElement.clientHeight) cargarContenido()
+    }, [isCargando])
 
     function cargarContenido() {
         setIsCargando(true)
         fuenteContenido(dispatch, pagina, filtro ? filtro : null).then((res) => {
-            const { datos: { content, last, number } } = res
+            const { datos: { content, last } } = res
             if (!res.error) {
                 setContenido([...contenido, ...content])
                 setHasMore(!last)

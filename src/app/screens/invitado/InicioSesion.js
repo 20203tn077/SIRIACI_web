@@ -19,8 +19,8 @@ export default function InicioSesion() {
     const [errorContrasena, setErrorContrasena] = useState(null)
 
     useEffect(() => {
-        document.body.classList.add('gradient')
-        return () => document.body.classList.remove('gradient')
+        document.body.classList.add('inicioSesion')
+        return () => document.body.classList.remove('inicioSesion')
     }, [])
 
     function iniciarSesion() {
@@ -53,8 +53,8 @@ export default function InicioSesion() {
     }
 
     return (
-        <Row className='gx-0'>
-            <Col xs={12} md={6} xl={4} className='bg-light shadow-lg' style={{ minHeight: '120vh' }}>
+        <Row className='gx-0' style={{minHeight: '100vh'}}>
+            <Col xs={12} md={6} xl={4} className='bg-light shadow-lg' style={{paddingTop: 60}}>
                 <div style={{ maxWidth: 640, position: 'sticky', top: '30%' }} className='mx-auto p-5'>
                     <h4 className='text-center'>Inicio de sesión</h4>
                     <Form noValidate onSubmit={(event) => {
@@ -77,7 +77,7 @@ export default function InicioSesion() {
                     </Form>
                 </div>
             </Col>
-            <Col xs={12} md={6} xl={8}>
+            <Col xs={12} md={6} xl={8} style={{paddingTop: 60}}>
                 <ListaCapsulas />
             </Col>
         </Row>

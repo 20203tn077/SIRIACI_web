@@ -5,7 +5,7 @@ import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 import { getFecha, getFechaYHora, getNombreCompleto, getTexto, toBase64 } from '../../utils/Formateador'
 import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
-import { CapsulasPublico, CapsulasResponsable } from '../../utils/Conexion'
+import { CapsulasResponsable } from '../../utils/Conexion'
 import Input, { InputImg, TextArea } from '../../utils/Input'
 import { ValidacionesCapsula } from '../../utils/Validador'
 import Tema from '../../utils/Tema'
@@ -211,20 +211,23 @@ export default function ListaCapsulas() {
     }
 
     function consultarCapsula(id) {
-        CapsulasPublico.obtenerCapsula(dispatch, id).then((res) => {
+        CapsulasResponsable.obtenerCapsula(dispatch, id).then((res) => {
             if (!res.error) {
                 const { titulo, fechaPublicacion, contenido, activo, imagenesCapsula } = res.datos
-                const datos = [
+                let datos = [
                     {
                         nombre: 'Contenido',
                         doble: true,
                         valor: <span className='textoSalto'>{contenido}</span>
-                    },
-                    {
-                        nombre: 'Imagenes',
-                        doble: true,
-                        valor: <ListaImagenes eventoPostImagen={consulta} imagenes={imagenesCapsula} />
-                    },
+                    }                    
+                ]
+                if (imagenesCapsula.length > 0) datos.push({
+                    nombre: 'Imagenes',
+                    doble: true,
+                    valor: <ListaImagenes eventoPostImagen={consulta} imagenes={imagenesCapsula} />
+                })
+                datos = [
+                    ...datos,
                     {
                         nombre: 'Estado',
                         valor: activo ? <Badge bg='success'>Activo</Badge> : <Badge bg='secondary'>Inactivo</Badge>

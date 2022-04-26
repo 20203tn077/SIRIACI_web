@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { Badge, Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import * as Icon from 'react-feather'
 import Logo from '../../assets/img/SGA_hoja.svg'
@@ -22,8 +22,8 @@ export default function NavAutenticado() {
                         <Nav.Link as={NavLink} to={'/capsulas'}>Cápsulas informativas</Nav.Link>
                     </Nav>
                     <Nav className='d-flex'>
-                        <NavDropdown title={correo} active>
-                            {/* <NavDropdown.Item to={'/perfil'} as={Link}><Icon.User size={18} className='me-2' /><span style={{ verticalAlign: 'middle' }}>Perfíl</span></NavDropdown.Item> */}
+                        <NavDropdown title={<><span className='align-middle'>{correo}</span>{multiRol ? <Badge className='ms-2 me-1 align-middle' bg='verde'>{({'ROLE_ADMINISTRADOR': 'Administrador','ROLE_RESPONSABLE': 'Responsable'})[rolActivo]}</Badge> : null}</>} active>
+                            <NavDropdown.Item to={'/perfil'} as={Link}><Icon.User size={18} className='me-2' /><span style={{ verticalAlign: 'middle' }}>Perfíl</span></NavDropdown.Item>
                             {multiRol ? <NavDropdown.Item onClick={() => { seleccionarRol(dispatch, navigate) }}><Icon.ToggleLeft size={18} className='me-2' /><span style={{ verticalAlign: 'middle' }}>Cambiar rol</span></NavDropdown.Item> : null}
                             <NavDropdown.Item onClick={() => {
                                 dispatch({ tipo: 'CERRAR SESION' })

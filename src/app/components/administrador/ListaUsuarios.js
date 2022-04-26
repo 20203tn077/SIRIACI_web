@@ -463,7 +463,7 @@ export default function ListaUsuarios() {
           }
         ]
 
-        let roles = [comunidadUtez ? 'Comunidad UTEZ' : 'Comunidad Externa']
+        let roles = [comunidadUtez ? 'Comunidad UTEZ' : 'Comunidad externa']
         if (estudiante) {
           roles.push('Estudiante')
           const { cuatrimestre, grupo, carrera: { nombre: carrera } } = estudiante

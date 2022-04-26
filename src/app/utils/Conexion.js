@@ -158,6 +158,11 @@ export const CapsulasResponsable = {
         if (filtro) url.searchParams.set('filtro', filtro)
         return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
     },
+    obtenerCapsula: (dispatch, id) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/capsulas/${id}`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
     registrarCapsula: (dispatch, capsula) => {
         mostrarLoader()
         let url = new URL(`/api/responsable/capsulas/`, baseUrl)
