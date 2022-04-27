@@ -16,6 +16,8 @@ import Redirect from './Redirect'
 import SolicitudRestablecimiento from '../screens/invitado/SolicitudRestablecimiento'
 import VerificacionCodigo from '../screens/invitado/VerificacionCodigo'
 import RestablecimientoContrasena from '../screens/invitado/RestablecimientoContrasena'
+import ReporteAdministrador from '../screens/administrador/Reporte'
+import ReporteResponsable from '../screens/responsable/Reporte'
 
 export default function AppRouter() {
     const { sesion: { autenticado, rolActivo, multiRol }, dispatch } = useContext(AutenticacionContext)
@@ -49,12 +51,14 @@ export default function AppRouter() {
                                     <Route path='/usuarios' element={<Usuarios />} />
                                     <Route path='/incidencias' element={<IncidenciasAdministrador />} />
                                     <Route path='/capsulas' element={<CapsulasAdministrador />} />
+                                    <Route path='/reporte' element={<ReporteAdministrador />} />
                                 </>,
                             'ROLE_RESPONSABLE':
                                 <>
                                     <Route path='/' element={<Redirect/>} />
                                     <Route path='/incidencias' element={<IncidenciasResponsable/>} />
                                     <Route path='/capsulas' element={<CapsulasResponsable/>} />
+                                    <Route path='/reporte' element={<ReporteResponsable />} />
                                 </>
                         })[rolActivo] || null}
                     </> : <>
