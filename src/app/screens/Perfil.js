@@ -4,7 +4,6 @@ import AutenticacionContext from '../components/autenticacion/AutenticacionConte
 import Alert, { alertConexion, alertError } from '../utils/Alert'
 import { UsuariosGeneral } from '../utils/Conexion'
 import Informacion from '../utils/Informacion'
-import Usuarios from './administrador/Usuarios'
 import fotoPerfil from '../../assets/img/perfil.png'
 import { getNombreCompleto } from '../utils/Formateador'
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +16,7 @@ export default function Perfil() {
     useEffect(() => {
         UsuariosGeneral.obtenerPerfil(dispatch).then((res) => {
             if (!res.error) {
-                const { correo, telefono, activo, comunidadUtez, estudiante, responsable, administrador } = res.datos
+                const { correo, telefono, comunidadUtez, estudiante, responsable, administrador } = res.datos
 
                 let datos = [
                     {

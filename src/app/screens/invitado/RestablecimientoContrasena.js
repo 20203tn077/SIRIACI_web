@@ -34,7 +34,7 @@ export default function RestablecimientoContrasena() {
     }
 
     setErrores(err)
-    if (numErrores == 0) {
+    if (numErrores === 0) {
       Restablecimiento.restablecerContrasena(dispatch, { correo, codigo, contrasena }).then((res) => {
         if (!res.error) {
           alertExito(res)

@@ -1,7 +1,7 @@
 import { mostrarLoader, mostrarMensaje } from "./Alert"
 
-// const baseUrl = 'https://siriaci-service.azurewebsites.net'
-const baseUrl = 'http://localhost:8080'
+const baseUrl = 'https://siriaci-service.azurewebsites.net'
+// const baseUrl = 'http://localhost:8080'
 
 function getInit(metodo, datos) {
     const sesion = JSON.parse(localStorage.getItem('sesion')) || null
@@ -17,9 +17,9 @@ function getInit(metodo, datos) {
 }
 
 function validarPeticion(dispatch, respuesta) {
-    if (respuesta.status == 200 || respuesta.status == 400) {
+    if (respuesta.status === 200 || respuesta.status === 400) {
         return respuesta.json()
-    } else if (respuesta.status == 403 || respuesta.status == 401) {
+    } else if (respuesta.status === 403 || respuesta.status === 401) {
         dispatch({ tipo: 'CERRAR SESION' })
         mostrarMensaje('Sesión caducada', 'La sesión ha caducado, vuelve a iniciar sesión.', 'info')
         return respuesta.json()

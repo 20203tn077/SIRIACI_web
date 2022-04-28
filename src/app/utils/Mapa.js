@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
 
 export default function Mapa(props) {
@@ -16,10 +16,10 @@ export default function Mapa(props) {
                     width: "auto"
                 }}
                 zoom={20}
-                center={{lat, lng}}
+                center={posicion}
             >
                 <Marker
-                    position={{lat, lng}}
+                    position={posicion}
                 />
             </GoogleMap>
         </LoadScript>

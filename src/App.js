@@ -2,7 +2,7 @@ import './App.css'
 import './App.scss'
 import AppRouter from './app/navigation/AppRouter'
 import AutenticacionContext from './app/components/autenticacion/AutenticacionContext'
-import { createContext, useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import autenticacionReducer from './app/components/autenticacion/AutenticacionReducer'
 
 const init = () => {

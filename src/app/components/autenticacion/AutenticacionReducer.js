@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function autenticacionReducer(estado = {}, accion) {
     switch (accion.tipo) {
         case 'INICIAR SESION':

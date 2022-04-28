@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Image } from 'react-bootstrap'
+import { Image } from 'react-bootstrap'
 import * as Icon from 'react-feather'
 import { alertImagen } from './Alert'
 

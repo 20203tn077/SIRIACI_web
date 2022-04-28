@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Badge, Button, Card, Col, Container, Form, FormControl, InputGroup, Nav, Row } from 'react-bootstrap'
+import { Badge, Button, Card, Col, Form, FormControl, InputGroup, Row } from 'react-bootstrap'
 import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 import { getNombreCompleto, getUsuarioLista } from '../../utils/Formateador'
-import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, alertRegistrar, mostrarMensaje } from '../../utils/Alert'
+import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito} from '../../utils/Alert'
 import Tema from '../../utils/Tema'
 import Input, { Pill, Select } from '../../utils/Input'
 import { ValidacionesUsuario } from '../../utils/Validador'
@@ -120,7 +120,7 @@ export default function ListaUsuarios() {
 
     function comprobarDivision() {
       guardar()
-      const objetos = carreras.find((division) => division.id == datosUsuario.division)
+      const objetos = carreras.find((division) => division.id === datosUsuario.division)
       carrerasFiltradas = objetos ? objetos.carreras : []
 
       try {
@@ -222,7 +222,7 @@ export default function ListaUsuarios() {
         numErroresResponsable++
       }
 
-      if (numErrores == 0 && (!datosUsuario.estudiante || numErroresEstudiante == 0) && (!datosUsuario.responsable || numErroresResponsable == 0)) registrarUsuario(datosUsuario)
+      if (numErrores === 0 && (!datosUsuario.estudiante || numErroresEstudiante === 0) && (!datosUsuario.responsable || numErroresResponsable === 0)) registrarUsuario(datosUsuario)
       else formulario()
     }
 
@@ -437,7 +437,7 @@ export default function ListaUsuarios() {
     UsuariosAdministrador.eliminarUsuario(dispatch, id).then((res) => {
       if (!res.error) {
         const usuariosActualizado = usuarios.map(usuario => {
-          if (usuario.id == id) return { ...usuario, activo: false }
+          if (usuario.id === id) return { ...usuario, activo: false }
           else return usuario
         })
         setUsuarios(usuariosActualizado)
@@ -571,7 +571,7 @@ export default function ListaUsuarios() {
 
           function comprobarDivision() {
             guardar()
-            const objetos = carreras.find((division) => division.id == datosUsuario.division)
+            const objetos = carreras.find((division) => division.id === datosUsuario.division)
             carrerasFiltradas = objetos ? objetos.carreras : []
 
             try {
@@ -663,30 +663,30 @@ export default function ListaUsuarios() {
               numErroresResponsable++
             }
 
-            if (numErrores == 0 && (!datosUsuario.estudiante || numErroresEstudiante == 0) && (!datosUsuario.responsable || numErroresResponsable == 0)) {
+            if (numErrores === 0 && (!datosUsuario.estudiante || numErroresEstudiante === 0) && (!datosUsuario.responsable || numErroresResponsable === 0)) {
               const nuevosDatos = {}
-              if (datosUsuario.nombre != datosOriginales.nombre) nuevosDatos.nombre = datosUsuario.nombre
-              if (datosUsuario.apellido1 != datosOriginales.apellido1) nuevosDatos.apellido1 = datosUsuario.apellido1
-              if (datosUsuario.apellido2 != datosOriginales.apellido2) nuevosDatos.apellido2 = datosUsuario.apellido2
-              if (datosUsuario.telefono != datosOriginales.telefono) nuevosDatos.telefono = datosUsuario.telefono
+              if (datosUsuario.nombre !== datosOriginales.nombre) nuevosDatos.nombre = datosUsuario.nombre
+              if (datosUsuario.apellido1 !== datosOriginales.apellido1) nuevosDatos.apellido1 = datosUsuario.apellido1
+              if (datosUsuario.apellido2 !== datosOriginales.apellido2) nuevosDatos.apellido2 = datosUsuario.apellido2
+              if (datosUsuario.telefono !== datosOriginales.telefono) nuevosDatos.telefono = datosUsuario.telefono
               if (datosUsuario.contrasena) {
-                if (datosUsuario.contrasena != datosOriginales.contrasena) nuevosDatos.contrasena = datosUsuario.contrasena
+                if (datosUsuario.contrasena !== datosOriginales.contrasena) nuevosDatos.contrasena = datosUsuario.contrasena
               }
               if (datosUsuario.estudiante) {
-                if (datosUsuario.carrera != datosOriginales.carrera) nuevosDatos.carrera = datosUsuario.carrera
-                if (datosUsuario.cuatrimestre != datosOriginales.cuatrimestre) nuevosDatos.cuatrimestre = datosUsuario.cuatrimestre
-                if (datosUsuario.grupo != datosOriginales.grupo) nuevosDatos.grupo = datosUsuario.grupo
+                if (datosUsuario.carrera !== datosOriginales.carrera) nuevosDatos.carrera = datosUsuario.carrera
+                if (datosUsuario.cuatrimestre !== datosOriginales.cuatrimestre) nuevosDatos.cuatrimestre = datosUsuario.cuatrimestre
+                if (datosUsuario.grupo !== datosOriginales.grupo) nuevosDatos.grupo = datosUsuario.grupo
               }
               if (datosUsuario.responsable) {
-                if (datosUsuario.aspecto != datosOriginales.aspecto) nuevosDatos.aspecto = datosUsuario.aspecto
+                if (datosUsuario.aspecto !== datosOriginales.aspecto) nuevosDatos.aspecto = datosUsuario.aspecto
               }
-              if (datosUsuario.responsable != datosOriginales.responsable) nuevosDatos.responsable = datosUsuario.responsable
-              if (datosUsuario.administrador != datosOriginales.administrador) nuevosDatos.administrador = datosUsuario.administrador
+              if (datosUsuario.responsable !== datosOriginales.responsable) nuevosDatos.responsable = datosUsuario.responsable
+              if (datosUsuario.administrador !== datosOriginales.administrador) nuevosDatos.administrador = datosUsuario.administrador
 
               UsuariosAdministrador.modificarUsuario(dispatch, id, nuevosDatos).then((res) => {
                 if (!res.error) {
                   let usuariosActualizado = usuarios.map((usuario) => {
-                    if (usuario.id == id) return getUsuarioLista({ ...datosOriginales, ...nuevosDatos })
+                    if (usuario.id === id) return getUsuarioLista({ ...datosOriginales, ...nuevosDatos })
                     else return usuario
                   })
                   setUsuarios(usuariosActualizado)
@@ -900,7 +900,7 @@ export default function ListaUsuarios() {
             </Form>
           </Col>
           <Col md='auto'>
-            <Button onClick={() => formularioRegistro()} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
+            <Button onClick={() => formularioRegistro()} disabled={aspectos.length === 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
           </Col>
         </Row>
       </Card.Header>

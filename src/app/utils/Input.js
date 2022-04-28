@@ -33,7 +33,7 @@ export function InputImg(props) {
     )
 }
 export function CheckSet(props) {
-    const { nombre, datos, error, valorName, imagenes, obligatorio, multiple, eventoCheck } = props
+    const { nombre, datos, error, obligatorio } = props
     return (
         <>
             {nombre ? <Form.Label>{nombre}:{obligatorio ? ' *' : null}</Form.Label> : null}

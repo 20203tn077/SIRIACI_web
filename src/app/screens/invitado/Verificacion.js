@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
-import NavInvitado from '../../navigation/NavInvitado'
 import { alertConexion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
 import { Verificacion as Conexion } from '../../utils/Conexion'
 

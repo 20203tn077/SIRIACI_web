@@ -1,10 +1,10 @@
 import React, { useContext, useRef, useState } from 'react'
-import { Badge, Button, Card, Col, Form, FormControl, Image, InputGroup, Nav, Row } from 'react-bootstrap'
+import { Badge, Button, Card, Col, Form, FormControl, InputGroup, Row } from 'react-bootstrap'
 import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
-import { getFecha, getFechaYHora, getNombreCompleto, getTexto, toBase64 } from '../../utils/Formateador'
-import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
+import { getFecha, getFechaYHora, getNombreCompleto, toBase64 } from '../../utils/Formateador'
+import Alert, { alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito } from '../../utils/Alert'
 import { CapsulasAdministrador } from '../../utils/Conexion'
 import Input, { InputImg, TextArea } from '../../utils/Input'
 import { ValidacionesCapsula } from '../../utils/Validador'
@@ -125,7 +125,7 @@ export default function ListaCapsulas() {
                 errores.contenido = error
                 numErrores++
             }
-            if (numErrores == 0) registrarCapsula(datosCapsula)
+            if (numErrores === 0) registrarCapsula(datosCapsula)
             else formulario()
         }
 
@@ -324,17 +324,17 @@ export default function ListaCapsulas() {
                             errores.contenido = error
                             numErrores++
                         }
-                        if (numErrores == 0) {
+                        if (numErrores === 0) {
                             const nuevosDatos = {}
-                            if (datosCapsula.titulo != datosOriginales.titulo) nuevosDatos.titulo = datosCapsula.titulo
-                            if (datosCapsula.contenido != datosOriginales.contenido) nuevosDatos.contenido = datosCapsula.contenido
+                            if (datosCapsula.titulo !== datosOriginales.titulo) nuevosDatos.titulo = datosCapsula.titulo
+                            if (datosCapsula.contenido !== datosOriginales.contenido) nuevosDatos.contenido = datosCapsula.contenido
                             nuevosDatos.imagenesCapsula = [...datosCapsula.imagenesCapsula.filter((imagen => !imagen.id)), ...imagenesEliminar]
 
                             CapsulasAdministrador.modificarCapsula(dispatch, id, nuevosDatos).then((res) => {
                                 if (!res.error) {
                                     if (nuevosDatos.titulo) {
                                         const capsulasActualizado = capsulas.map((capsula) => {
-                                            if (capsula.id == id) return {...capsula, titulo: nuevosDatos.titulo}
+                                            if (capsula.id === id) return {...capsula, titulo: nuevosDatos.titulo}
                                             else return capsula
                                         })
                                         setCapsulas(capsulasActualizado)

@@ -1,4 +1,4 @@
-import { Canvas, Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import {  Document, Font, Image, Page,  Text, View } from '@react-pdf/renderer'
 import React from 'react'
 import logoUtez from '../../assets/img/UTEZ_logo_reporte.png'
 import logoSga from '../../assets/img/SGA_logo_reporte.png'
@@ -59,7 +59,7 @@ export default function Documento(props) {
                             <Columna columna={4}>{fila.estado.nombre}</Columna>
                         </Fila>
                     ))}
-                    {datos.length == 0 ? <Fila indice={0}>
+                    {datos.length === 0 ? <Fila indice={0}>
                             <Columna columna={0}>Sin registros</Columna>
                         </Fila> : null}
                 </Tabla>
@@ -103,7 +103,7 @@ function Fila(props) {
                 borderBottomWidth: !header ? 0.75 : null,
                 flexDirection: 'row',
                 color: header ? '#fff' : null,
-                backgroundColor: header ? Tema.azulDark : (indice % 2 == 1 ? '#F1F4F8' : null),
+                backgroundColor: header ? Tema.azulDark : (indice % 2 === 1 ? '#F1F4F8' : null),
                 borderColor: '#BBCADD',
                 fontWeight: header ? 800 : 200
             }}

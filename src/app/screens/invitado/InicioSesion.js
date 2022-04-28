@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap'
+import { Button,  Col, Form, Row} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
 import ListaCapsulas from '../../components/invitado/ListaCapsulas'
@@ -38,7 +38,7 @@ export default function InicioSesion() {
         setErrorContrasena(error)
         if (error) errores++
 
-        if (errores == 0) {
+        if (errores === 0) {
             Acceso.iniciarSesion(dispatch, { correo, contrasena }).then((res) => {
                 if (!res.error) {
                     console.log(res.datos);

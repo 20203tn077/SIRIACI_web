@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Button, Card, Col, Row } from 'react-bootstrap'
-import { alertConexion, alertError, mostrarCapsula, mostrarMensaje } from '../../utils/Alert'
+import { alertConexion, alertError, mostrarCapsula} from '../../utils/Alert'
 import { CapsulasPublico } from '../../utils/Conexion'
 import { getFecha } from '../../utils/Formateador'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'

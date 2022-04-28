@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import AutenticacionContext from '../components/autenticacion/AutenticacionContext'
 import { Seleccionables, UsuariosGeneral } from '../utils/Conexion'
-import Input, { Pill, Select } from '../utils/Input'
+import Input, {  Select } from '../utils/Input'
 import { ValidacionesUsuario } from '../utils/Validador'
 import * as Icon from 'react-feather'
 import Alert, { alertConexion, alertConfirmacion, alertError, alertExito } from '../utils/Alert'
@@ -76,7 +76,7 @@ export default function ModificarDatos() {
 
     function comprobarDivision() {
         guardar()
-        const objetos = carreras.find((division) => division.id == datosUsuario.division)
+        const objetos = carreras.find((division) => division.id === datosUsuario.division)
         setCarrerasFiltradas(objetos ? objetos.carreras : [])
         txtCarrera.current.value = ''
     }
@@ -157,25 +157,25 @@ export default function ModificarDatos() {
 
         setErrores(erroresTemp)
 
-        if (numErrores == 0 && (!datosUsuario.estudiante || numErroresEstudiante == 0) && (!datosUsuario.responsable || numErroresResponsable == 0)) {
+        if (numErrores === 0 && (!datosUsuario.estudiante || numErroresEstudiante === 0) && (!datosUsuario.responsable || numErroresResponsable === 0)) {
             const nuevosDatos = {}
-            if (datosUsuario.nombre != datosOriginales.nombre) nuevosDatos.nombre = datosUsuario.nombre
-            if (datosUsuario.apellido1 != datosOriginales.apellido1) nuevosDatos.apellido1 = datosUsuario.apellido1
-            if (datosUsuario.apellido2 != datosOriginales.apellido2) nuevosDatos.apellido2 = datosUsuario.apellido2
-            if (datosUsuario.telefono != datosOriginales.telefono) nuevosDatos.telefono = datosUsuario.telefono
+            if (datosUsuario.nombre !== datosOriginales.nombre) nuevosDatos.nombre = datosUsuario.nombre
+            if (datosUsuario.apellido1 !== datosOriginales.apellido1) nuevosDatos.apellido1 = datosUsuario.apellido1
+            if (datosUsuario.apellido2 !== datosOriginales.apellido2) nuevosDatos.apellido2 = datosUsuario.apellido2
+            if (datosUsuario.telefono !== datosOriginales.telefono) nuevosDatos.telefono = datosUsuario.telefono
             if (datosUsuario.contrasena) {
-                if (datosUsuario.contrasena != datosOriginales.contrasena) nuevosDatos.contrasena = datosUsuario.contrasena
+                if (datosUsuario.contrasena !== datosOriginales.contrasena) nuevosDatos.contrasena = datosUsuario.contrasena
             }
             if (datosUsuario.estudiante) {
-                if (datosUsuario.carrera != datosOriginales.carrera) nuevosDatos.carrera = datosUsuario.carrera
-                if (datosUsuario.cuatrimestre != datosOriginales.cuatrimestre) nuevosDatos.cuatrimestre = datosUsuario.cuatrimestre
-                if (datosUsuario.grupo != datosOriginales.grupo) nuevosDatos.grupo = datosUsuario.grupo
+                if (datosUsuario.carrera !== datosOriginales.carrera) nuevosDatos.carrera = datosUsuario.carrera
+                if (datosUsuario.cuatrimestre !== datosOriginales.cuatrimestre) nuevosDatos.cuatrimestre = datosUsuario.cuatrimestre
+                if (datosUsuario.grupo !== datosOriginales.grupo) nuevosDatos.grupo = datosUsuario.grupo
             }
             if (datosUsuario.responsable) {
-                if (datosUsuario.aspecto != datosOriginales.aspecto) nuevosDatos.aspecto = datosUsuario.aspecto
+                if (datosUsuario.aspecto !== datosOriginales.aspecto) nuevosDatos.aspecto = datosUsuario.aspecto
             }
-            if (datosUsuario.responsable != datosOriginales.responsable) nuevosDatos.responsable = datosUsuario.responsable
-            if (datosUsuario.administrador != datosOriginales.administrador) nuevosDatos.administrador = datosUsuario.administrador
+            if (datosUsuario.responsable !== datosOriginales.responsable) nuevosDatos.responsable = datosUsuario.responsable
+            if (datosUsuario.administrador !== datosOriginales.administrador) nuevosDatos.administrador = datosUsuario.administrador
             UsuariosGeneral.automodificacion(dispatch, nuevosDatos).then((res) => {
                 if (!res.error) {
                     alertExito(res).then((res) => {

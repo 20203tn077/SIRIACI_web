@@ -24,13 +24,12 @@
     "stream-browserify": "^3.0.0",
     "sweetalert2": "^11.4.8",
     "sweetalert2-react-content": "^5.0.0",
-    "util": "^0.12.4",
-    "web-vitals": "^2.1.0"
+    "util": "^0.12.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "CI=false && react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "CI=false && react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -50,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }

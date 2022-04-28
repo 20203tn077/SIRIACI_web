@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Spinner, Table } from 'react-bootstrap'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AutenticacionContext from '../components/autenticacion/AutenticacionContext'
-import { alertConexion, alertError, mostrarMensaje } from './Alert'
+import { alertConexion, alertError} from './Alert'
 
 export default function TablaInfinita(props) {
     const { contenido, setContenido, filtro, numerada, columnas, fuenteContenido, onClickElemento } = props

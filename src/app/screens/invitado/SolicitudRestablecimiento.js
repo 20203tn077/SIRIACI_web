@@ -1,11 +1,11 @@
 import React, { useContext, useRef, useState } from 'react'
-import { Button, Card, Container, Form, FormControl } from 'react-bootstrap'
+import { Button, Card, Container, Form} from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import AutenticacionContext from '../../components/autenticacion/AutenticacionContext'
 import { alertConexion, alertError, alertExito } from '../../utils/Alert'
 import { Restablecimiento } from '../../utils/Conexion'
 import Input from '../../utils/Input'
-import { isVacio, validarCampoObligatorio } from '../../utils/Validador'
+import {validarCampoObligatorio } from '../../utils/Validador'
 import * as Icon from 'react-feather'
 
 export default function SolicitudRestablecimiento() {

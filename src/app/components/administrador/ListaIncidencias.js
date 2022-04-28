@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Badge, Button, Card, Col, Container, Form, FormControl, Image, InputGroup, Nav, Row } from 'react-bootstrap'
+import { Badge, Button, Card, Col, Form, FormControl, InputGroup,  Row } from 'react-bootstrap'
 import TablaInfinita from '../../utils/TablaInfinita'
 import * as Icon from 'react-feather'
 import AutenticacionContext from '../autenticacion/AutenticacionContext'
 import { getFecha, getFechaYHora, getNombreCompleto } from '../../utils/Formateador'
 import Mapa from '../../utils/Mapa'
-import Alert, { alertAtender, alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
-import { useParams } from 'react-router-dom'
+import Alert, {  alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito } from '../../utils/Alert'
 import { IncidenciasAdministrador, ReportesAdministrador, Seleccionables } from '../../utils/Conexion'
 import { ListaImagenes } from '../../utils/Informacion'
-import { isVacio, ValidacionesIncidencia, validarCampoObligatorio } from '../../utils/Validador'
+import {  ValidacionesIncidencia, validarCampoObligatorio } from '../../utils/Validador'
 import Input, { CheckSet, TextArea } from '../../utils/Input'
 import Tema from '../../utils/Tema'
-import { pdf, usePDF } from '@react-pdf/renderer'
+import { pdf } from '@react-pdf/renderer'
 import Documento from '../../utils/Documento'
 
 export default function ListaIncidencias() {
@@ -22,7 +21,6 @@ export default function ListaIncidencias() {
   const [filtro, setFiltro] = useState(null)
   const [incidencias, setIncidencias] = useState([])
   const txtFiltro = useRef()
-  const codigo = useParams('codigo')
   const txtComentario = useRef()
   const txtFechaInicial = useRef()
   const txtFechaFinal = useRef()
@@ -88,7 +86,7 @@ export default function ListaIncidencias() {
     IncidenciasAdministrador.eliminarIncidencia(dispatch, id).then((res) => {
       if (!res.error) {
         const incidenciasActualizado = incidencias.map(incidencia => {
-          if (incidencia.id == id) return { ...incidencia, activo: false }
+          if (incidencia.id === id) return { ...incidencia, activo: false }
           else return incidencia
         })
         setIncidencias(incidenciasActualizado)
@@ -158,7 +156,7 @@ export default function ListaIncidencias() {
         ]
 
         function consulta() {
-          alertConsulta(datos, activo && estado.id != 3, activo, descripcion, `Reportado por ${getNombreCompleto(res.datos.usuario)} el ${getFechaYHora(tiempoIncidencia)}.`, { texto: 'Atender', icono: <Icon.CheckSquare size={20} className='me-2' /> }).then((res) => {
+          alertConsulta(datos, activo && estado.id !== 3, activo, descripcion, `Reportado por ${getNombreCompleto(res.datos.usuario)} el ${getFechaYHora(tiempoIncidencia)}.`, { texto: 'Atender', icono: <Icon.CheckSquare size={20} className='me-2' /> }).then((res) => {
             if (res.isDenied) eliminacion()
             if (res.isConfirmed) formularioAtencion()
           })
@@ -180,7 +178,7 @@ export default function ListaIncidencias() {
           }
 
           function formulario() {
-            const nuevoEstado = estados.find(a => a.id == estado.id + 1)
+            const nuevoEstado = estados.find(a => a.id === estado.id + 1)
             Alert.fire({
               showCancelButton: true,
               cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
@@ -230,11 +228,11 @@ export default function ListaIncidencias() {
               errores.comentario = error
               numErrores++
             }
-            if (numErrores == 0) {
+            if (numErrores === 0) {
               IncidenciasAdministrador.antenderIncidencia(dispatch, id, datosIncidencia).then((res) => {
                 if (!res.error) {
                   let incidenciasActualizado = incidencias.map((incidencia) => {
-                    if (incidencia.id == id) return { ...incidencia, estado: estados.find(estado => estado.id == incidencia.estado.id + 1) }
+                    if (incidencia.id === id) return { ...incidencia, estado: estados.find(estado => estado.id === incidencia.estado.id + 1) }
                     else return incidencia
                   })
                   setIncidencias(incidenciasActualizado)
@@ -398,7 +396,7 @@ export default function ListaIncidencias() {
             </Form>
           </Col>
           <Col md='auto'>
-            <Button onClick={alertReporte} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.FileText /></Button>
+            <Button onClick={alertReporte} disabled={aspectos.length === 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.FileText /></Button>
           </Col>
         </Row>
       </Card.Header>

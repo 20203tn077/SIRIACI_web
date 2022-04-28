@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Container } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
 import ListaUsuarios from '../../components/administrador/ListaUsuarios'
 
 export default function Usuarios() {
