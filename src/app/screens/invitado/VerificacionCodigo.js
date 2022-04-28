@@ -32,8 +32,10 @@ export default function VerificacionCodigo() {
   return (
     <Container className='mt-md-4 mt-3'>
       <Card className='shadow mx-auto'>
+        <Card.Header className='bg-azul-dark text-white'>
+          <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Restablecer contraseña</Card.Title>
+        </Card.Header>
         <Card.Body>
-          <Card.Title>Restablecer contraseña</Card.Title>
           <Card.Text>
             Hemos enviado un código de 6 dígitos a <b>{correo}</b>, revisa tu bandeja de entrada. Debes canjear el código durante los siguientes 10 minutos.
           </Card.Text>

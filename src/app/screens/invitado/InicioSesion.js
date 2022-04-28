@@ -41,10 +41,13 @@ export default function InicioSesion() {
         if (errores == 0) {
             Acceso.iniciarSesion(dispatch, { correo, contrasena }).then((res) => {
                 if (!res.error) {
-                    dispatch({
-                        tipo: 'INICIAR SESION',
-                        datos: res.datos
-                    })
+                    console.log(res.datos);
+                    if (res.datos.roles.length > 1) {
+                        dispatch({
+                            tipo: 'INICIAR SESION',
+                            datos: res.datos
+                        })
+                    } else mostrarMensaje('Error de acceso', 'La aplicación web solo está disponible para usuarios administrativos.', 'error')
                 } else {
                     alertError(res, 'Inicio de sesión fallido')
                 }

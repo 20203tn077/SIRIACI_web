@@ -18,7 +18,6 @@ export default function ListaUsuarios() {
   const [carreras, setCarreras] = useState([])
   const [aspectos, setAspectos] = useState([])
   const txtFiltro = useRef()
-  const btnAgregar = useRef()
 
   const txtNombre = useRef()
   const txtApellido1 = useRef()
@@ -48,9 +47,9 @@ export default function ListaUsuarios() {
 
   useEffect(() => {
     (async () => {
-      let res = await Seleccionables.obtenerCarreras()
+      let res = await Seleccionables.obtenerCarreras(dispatch)
       if (!res.error) setCarreras(res.datos)
-      res = await Seleccionables.obtenerAspectos()
+      res = await Seleccionables.obtenerAspectos(dispatch)
       if (!res.error) setAspectos(res.datos)
     })()
   }, [])
@@ -753,7 +752,6 @@ export default function ListaUsuarios() {
                     <Col xs='12' md='6'>
                       <Input
                         nombre='Contraseña'
-                        obligatorio
                         referencia={txtContrasena}
                         error={errores.contrasena}
                         valorInicial={datosUsuario.contrasena}
@@ -763,7 +761,6 @@ export default function ListaUsuarios() {
                     <Col xs='12' md='6'>
                       <Input
                         nombre='Confirmar contraseña'
-                        obligatorio
                         referencia={txtContrasena2}
                         error={errores.contrasena2}
                         valorInicial={datosUsuario.contrasena2}
@@ -851,7 +848,7 @@ export default function ListaUsuarios() {
               showConfirmButton: true,
               showDenyButton: false,
               cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cancelar</span></>,
-              confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Registrar</span></>,
+              confirmButtonText: <><Icon.Check size={20} className='me-2' /><span className='align-middle'>Guardar</span></>,
               title: 'Modificar usuario',
               width: 800,
               confirmButtonColor: Tema.azul
@@ -903,7 +900,7 @@ export default function ListaUsuarios() {
             </Form>
           </Col>
           <Col md='auto'>
-            <Button ref={btnAgregar} onClick={() => formularioRegistro()} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
+            <Button onClick={() => formularioRegistro()} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.Plus /></Button>
           </Col>
         </Row>
       </Card.Header>

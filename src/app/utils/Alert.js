@@ -4,7 +4,7 @@ import withReactContent from 'sweetalert2-react-content'
 import Informacion from './Informacion'
 import Tema from './Tema'
 import * as Icon from 'react-feather'
-import { TextArea } from './Input'
+import Input, { TextArea } from './Input'
 
 const Alert = withReactContent(Swal)
 export default Alert

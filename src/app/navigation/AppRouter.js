@@ -16,8 +16,8 @@ import Redirect from './Redirect'
 import SolicitudRestablecimiento from '../screens/invitado/SolicitudRestablecimiento'
 import VerificacionCodigo from '../screens/invitado/VerificacionCodigo'
 import RestablecimientoContrasena from '../screens/invitado/RestablecimientoContrasena'
-import ReporteAdministrador from '../screens/administrador/Reporte'
-import ReporteResponsable from '../screens/responsable/Reporte'
+import Perfil from '../screens/Perfil'
+import ModificarDatos from '../screens/ModificarDatos'
 
 export default function AppRouter() {
     const { sesion: { autenticado, rolActivo, multiRol }, dispatch } = useContext(AutenticacionContext)
@@ -43,32 +43,32 @@ export default function AppRouter() {
             </>}
             <Routes>
                 {autenticado ? <>
+                    <Route path='/perfil' element={<Perfil />} />
+                    <Route path='/perfil/modificar' element={<ModificarDatos/>} />
                     {rolActivo ? <>
                         {({
                             'ROLE_ADMINISTRADOR':
                                 <>
-                                    <Route path='/' element={<Redirect/>} />
+                                    <Route path='/' element={<Redirect />} />
                                     <Route path='/usuarios' element={<Usuarios />} />
                                     <Route path='/incidencias' element={<IncidenciasAdministrador />} />
                                     <Route path='/capsulas' element={<CapsulasAdministrador />} />
-                                    <Route path='/reporte' element={<ReporteAdministrador />} />
                                 </>,
                             'ROLE_RESPONSABLE':
                                 <>
-                                    <Route path='/' element={<Redirect/>} />
-                                    <Route path='/incidencias' element={<IncidenciasResponsable/>} />
-                                    <Route path='/capsulas' element={<CapsulasResponsable/>} />
-                                    <Route path='/reporte' element={<ReporteResponsable />} />
+                                    <Route path='/' element={<Redirect />} />
+                                    <Route path='/incidencias' element={<IncidenciasResponsable />} />
+                                    <Route path='/capsulas' element={<CapsulasResponsable />} />
                                 </>
                         })[rolActivo] || null}
                     </> : <>
-                    <Route path='/' element={<div/>} />
+                        <Route path='/' element={<div />} />
                     </>}
                 </> : <>
                     <Route path='/' element={<InicioSesion />} />
-                    <Route path='/restablecimiento/solicitud' element={<SolicitudRestablecimiento/>} />
-                    <Route path='/restablecimiento/verificacion' element={<VerificacionCodigo/>} />
-                    <Route path='/restablecimiento/contrasena' element={<RestablecimientoContrasena/>} />
+                    <Route path='/restablecimiento/solicitud' element={<SolicitudRestablecimiento />} />
+                    <Route path='/restablecimiento/verificacion' element={<VerificacionCodigo />} />
+                    <Route path='/restablecimiento/contrasena' element={<RestablecimientoContrasena />} />
                 </>}
                 <Route path='/verificacion/' element={<Verificacion />} />
                 <Route path='*' element={<None />} />

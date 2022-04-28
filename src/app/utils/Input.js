@@ -22,12 +22,29 @@ export function InputImg(props) {
                 <Row className='g-3 mb-2'>
                     {imagenes.map((imagen, index) => (
                         <Col xs={12} sm={6} md={4} key={index}>
-                            <Imagen eventoEliminar={() => {eventoEliminar(index)}} source={imagen.imagen} />
+                            <Imagen eventoEliminar={() => { eventoEliminar(index) }} source={imagen.imagen} />
                         </Col>
                     ))}
                 </Row>
             ) : null}
             <Form.Control type='file' onChange={eventoSubida} name={valorName} ref={referencia} multiple={multiple} accept='image/*' />
+            {error ? <span className='error'>{error}</span> : null}
+        </>
+    )
+}
+export function CheckSet(props) {
+    const { nombre, datos, error, valorName, imagenes, obligatorio, multiple, eventoCheck } = props
+    return (
+        <>
+            {nombre ? <Form.Label>{nombre}:{obligatorio ? ' *' : null}</Form.Label> : null}
+            {datos.map(({opcion, id}, index) => (
+                    <Form.Check
+                        key={index}
+                        type='checkbox'
+                        label={opcion}
+                        id={id}
+                    />
+            ))}
             {error ? <span className='error'>{error}</span> : null}
         </>
     )

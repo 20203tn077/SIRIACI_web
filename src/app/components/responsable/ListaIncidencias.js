@@ -7,24 +7,32 @@ import { getFecha, getFechaYHora, getNombreCompleto } from '../../utils/Formatea
 import Mapa from '../../utils/Mapa'
 import Alert, { alertAtender, alertConexion, alertConfirmacion, alertConsulta, alertEliminacion, alertError, alertExito, mostrarMensaje } from '../../utils/Alert'
 import { useParams } from 'react-router-dom'
-import { IncidenciasResponsable, Seleccionables } from '../../utils/Conexion'
+import { IncidenciasResponsable, ReportesResponsable, Seleccionables } from '../../utils/Conexion'
 import { ListaImagenes } from '../../utils/Informacion'
-import { ValidacionesIncidencia } from '../../utils/Validador'
-import { TextArea } from '../../utils/Input'
+import { ValidacionesIncidencia, validarCampoObligatorio } from '../../utils/Validador'
+import Input, { TextArea } from '../../utils/Input'
 import Tema from '../../utils/Tema'
+import { pdf } from '@react-pdf/renderer'
+import Documento from '../../utils/Documento'
 
 export default function ListaIncidencias() {
-  const { dispatch } = useContext(AutenticacionContext)
+  const { dispatch, sesion: { aspecto } } = useContext(AutenticacionContext)
   const [estados, setEstados] = useState([])
+  const [aspectos, setAspectos] = useState([])
   const [filtro, setFiltro] = useState(null)
   const [incidencias, setIncidencias] = useState([])
   const txtFiltro = useRef()
   const codigo = useParams('codigo')
   const txtComentario = useRef()
+  const txtFechaInicial = useRef()
+  const txtFechaFinal = useRef()
 
   useEffect(() => {
     Seleccionables.obtenerEstados(dispatch).then((res) => {
       if (!res.error) setEstados(res.datos)
+    })
+    Seleccionables.obtenerAspectos(dispatch).then((res) => {
+      if (!res.error) setAspectos(res.datos)
     })
     const params = new URLSearchParams(window.location.search)
     const codigo = params.get('codigo')
@@ -132,7 +140,7 @@ export default function ListaIncidencias() {
         }
 
         function formularioAtencion() {
-          let datosIncidencia = {comentario}
+          let datosIncidencia = { comentario }
           let errores = {}
 
           function guardar() {
@@ -219,15 +227,103 @@ export default function ListaIncidencias() {
       } else alertError(res, 'Error al obtener los datos de la incidencia')
     }).catch(alertConexion)
   }
+  function alertReporte() {
+    let datos = {}
+    let errores = {}
+    let opciones = []
+    aspectos.forEach((aspecto) => {
+      opciones.push({ opcion: aspecto.nombre, id: `opc${aspecto.id}`, idAspecto: aspecto.id })
+    })
 
+    function generar() {
+      datos.fechaInicio = txtFechaInicial.current.value
+      datos.fechaFin = txtFechaFinal.current.value
+
+      let numErrores = 0
+      let error = validarCampoObligatorio(datos.fechaInicio)
+      if (error) {
+        errores.fechaInicio = error
+        numErrores++
+      }
+      error = validarCampoObligatorio(datos.fechaFin)
+      if (error) {
+        errores.fechaFin = error
+        numErrores++
+      }
+
+      if (numErrores === 0) {
+        ReportesResponsable.obtenerReporte(dispatch, datos).then((res) => {
+          if (!res.error) {
+            pdf(<Documento datos={{ ...datos, aspectos: [aspecto], datos: res.datos }} />).toBlob().then((blob) => {
+              window.open(URL.createObjectURL(blob))
+              Alert.close()
+            })
+          } else alertError(res, 'Error al generar reporte')
+        }).catch(alertConexion)
+      } else {
+        formulario()
+      }
+
+
+    }
+
+    function formulario() {
+      Alert.fire({
+        allowEnterKey: false,
+        showCancelButton: true,
+        cancelButtonText: <><Icon.X strokeWidth={1.7} className='me-1' /><span className='align-middle'>Cerrar</span></>,
+        confirmButtonText: <><Icon.FileText size={20} className='me-2' /><span className='align-middle'>Generar reporte</span></>,
+        title: 'Reporte general',
+        width: 800,
+        html: (
+          <>
+            <Row className='text-start w-100 m-0'>
+              <Col><hr className='my-0' /></Col>
+            </Row>
+            <Row className='text-start w-100 m-0 g-3'>
+              <Col xs='12' md='6'>
+                <Input
+                  nombre='Fecha inicial'
+                  obligatorio
+                  tipo='date'
+                  referencia={txtFechaInicial}
+                  error={errores.fechaInicio}
+                  valorInicial={datos.fechaInicio}
+                  max={new Date().toLocaleDateString('en-ca')}
+                />
+              </Col>
+              <Col xs='12' md='6'>
+                <Input
+                  nombre='Fecha final'
+                  obligatorio
+                  tipo='date'
+                  referencia={txtFechaFinal}
+                  error={errores.fechaFin}
+                  valorInicial={datos.fechaFin}
+                  max={new Date().toLocaleDateString('en-ca')}
+                />
+              </Col>
+            </Row>
+            <Row className='text-start w-100 mx-0 mt-3 mb-0'>
+              <Col><hr className='my-0' /></Col>
+            </Row>
+          </>
+        ),
+        confirmButtonColor: Tema.azulLight
+      }).then((res) => {
+        if (res.isConfirmed) generar()
+      })
+    }
+    formulario()
+  }
   return (
     <Card className='shadow mx-auto'>
       <Card.Header className='bg-azul-dark text-white'>
         <Row className='gy-2 gy-md-0'>
           <Col>
-            <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Incidencias</Card.Title>
+            <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Incidencias ambientales en: {aspecto}</Card.Title>
           </Col>
-          <Col md='auto'>
+          <Col md='auto' className='p-md-0'>
             <Form noValidate onSubmit={(event) => {
               event.preventDefault()
               buscar()
@@ -240,6 +336,9 @@ export default function ListaIncidencias() {
                 <Button type='submit' variant='verde'><Icon.Search /></Button>
               </InputGroup>
             </Form>
+          </Col>
+          <Col md='auto'>
+            <Button onClick={alertReporte} disabled={aspectos.length == 0} variant='verde' style={{ height: 40, width: 40, padding: 6, aspectRatio: 1 / 1, borderRadius: '50%' }}><Icon.FileText /></Button>
           </Col>
         </Row>
       </Card.Header>

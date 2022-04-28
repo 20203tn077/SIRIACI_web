@@ -20,7 +20,6 @@ export default function NavAutenticado() {
                         {rolActivo === 'ROLE_ADMINISTRADOR' ? <Nav.Link as={NavLink} to={'/usuarios'}>Usuarios</Nav.Link> : null}
                         <Nav.Link as={NavLink} to={'/incidencias'}>Incidencias ambientales</Nav.Link>
                         <Nav.Link as={NavLink} to={'/capsulas'}>Cápsulas informativas</Nav.Link>
-                        <Nav.Link as={NavLink} to={'/reporte'}>Generar reporte</Nav.Link>
                     </Nav>
                     <Nav className='d-flex'>
                         <NavDropdown title={<><span className='align-middle'>{correo}</span>{multiRol ? <Badge className='ms-2 me-1 align-middle' bg='verde'>{({'ROLE_ADMINISTRADOR': 'Administrador','ROLE_RESPONSABLE': 'Responsable'})[rolActivo]}</Badge> : null}</>} active>

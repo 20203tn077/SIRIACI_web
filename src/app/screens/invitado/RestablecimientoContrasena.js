@@ -35,10 +35,10 @@ export default function RestablecimientoContrasena() {
 
     setErrores(err)
     if (numErrores == 0) {
-      Restablecimiento.restablecerContrasena(dispatch, {correo, codigo, contrasena}).then((res) => {
+      Restablecimiento.restablecerContrasena(dispatch, { correo, codigo, contrasena }).then((res) => {
         if (!res.error) {
           alertExito(res)
-          navigate('/', {replace: true})
+          navigate('/', { replace: true })
         } else alertError(res, 'Error al actualizar la contraseña')
       }).catch(alertConexion)
     }
@@ -47,8 +47,10 @@ export default function RestablecimientoContrasena() {
   return (
     <Container className='mt-md-4 mt-3'>
       <Card className='shadow mx-auto'>
+        <Card.Header className='bg-azul-dark text-white'>
+          <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Restablecer contraseña</Card.Title>
+        </Card.Header>
         <Card.Body>
-          <Card.Title>Restablecer contraseña</Card.Title>
           <Card.Text>
             Ingresa una nueva contraseña. Tienes 10 minutos para realizar el cambio.
           </Card.Text>

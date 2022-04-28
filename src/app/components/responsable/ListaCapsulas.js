@@ -422,7 +422,7 @@ export default function ListaCapsulas() {
             <Card.Header className='bg-azul-dark text-white'>
                 <Row className='gy-2 gy-md-0'>
                     <Col>
-                        <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Cápsulas informativas</Card.Title>
+                        <Card.Title style={{ paddingBlock: '0.5rem' }} className='m-0'>Mis cápsulas informativas</Card.Title>
                     </Col>
                     <Col md='auto' className='p-md-0'>
                         <Form noValidate onSubmit={(event) => {

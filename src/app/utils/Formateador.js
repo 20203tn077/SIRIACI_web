@@ -29,6 +29,14 @@ export function getFecha(tiempoJava) {
     }
     return '' + tiempo.getDate() + ' de ' + mes + ' de ' + tiempo.getFullYear()
 }
+export function getFechaCorta(tiempoJava) {
+    const tiempo = new Date(tiempoJava)
+    const dia = tiempo.getDate()
+    const mes = tiempo.getMonth() + 1
+    const anio = tiempo.getFullYear()
+
+    return '' + (dia > 9 ? '' : '0') + dia + '/' + (mes > 9 ? '' : '0') + mes + '/' + anio
+}
 export function getHora(tiempoJava) {
     const tiempo = new Date(tiempoJava)
     return '' + tiempo.getHours() + ':' + tiempo.getMinutes()

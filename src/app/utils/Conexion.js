@@ -1,7 +1,7 @@
 import { mostrarLoader, mostrarMensaje } from "./Alert"
 
-const baseUrl = 'https://siriaci-service.azurewebsites.net'
-// const baseUrl = 'http://localhost:8080'
+// const baseUrl = 'https://siriaci-service.azurewebsites.net'
+const baseUrl = 'http://localhost:8080'
 
 function getInit(metodo, datos) {
     const sesion = JSON.parse(localStorage.getItem('sesion')) || null
@@ -28,6 +28,20 @@ function validarPeticion(dispatch, respuesta) {
     }
 }
 
+export const ReportesAdministrador = {
+    obtenerReporte: (dispatch, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/administrador/reportes/`, baseUrl)
+        return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
+    }
+}
+export const ReportesResponsable = {
+    obtenerReporte: (dispatch, datos) => {
+        mostrarLoader()
+        let url = new URL(`/api/responsable/reportes/`, baseUrl)
+        return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
+    }
+}
 export const Verificacion = {
     verificarUsuario(dispatch, datos) {
         mostrarLoader()
@@ -40,6 +54,18 @@ export const Acceso = {
         mostrarLoader()
         let url = new URL(`/api/iniciosesion/`, baseUrl)
         return fetch(url, getInit('POST', datos)).then((res) => validarPeticion(dispatch, res))
+    }
+}
+export const UsuariosGeneral = {
+    obtenerPerfil: (dispatch) => {
+        mostrarLoader()
+        let url = new URL(`/api/usuarios/`, baseUrl)
+        return fetch(url, getInit('GET')).then((res) => validarPeticion(dispatch, res))
+    },
+    automodificacion: (dispatch, usuario) => {
+        mostrarLoader()
+        let url = new URL(`/api/usuarios/`, baseUrl)
+        return fetch(url, getInit('PATCH', usuario)).then((res) => validarPeticion(dispatch, res))
     }
 }
 export const UsuariosAdministrador = {

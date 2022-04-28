@@ -9,7 +9,7 @@ import { isVacio, validarCampoObligatorio } from '../../utils/Validador'
 import * as Icon from 'react-feather'
 
 export default function SolicitudRestablecimiento() {
-    const {dispatch} = useContext(AutenticacionContext)
+    const { dispatch } = useContext(AutenticacionContext)
     const navigate = useNavigate()
     const [errorCorreo, setErrorCorreo] = useState(null)
     const txtCorreo = useRef()
@@ -19,20 +19,22 @@ export default function SolicitudRestablecimiento() {
         const error = validarCampoObligatorio(correo)
         if (error) setErrorCorreo(error)
         else {
-            Restablecimiento.registrarSolicitud(dispatch, {correo}).then((res) => {
+            Restablecimiento.registrarSolicitud(dispatch, { correo }).then((res) => {
                 if (!res.error) {
                     alertExito(res)
-                    navigate('/restablecimiento/verificacion', {state: {correo}})
+                    navigate('/restablecimiento/verificacion', { state: { correo } })
                 } else alertError(res, 'Error al solicitar código de restablecimiento')
-            }).catch (alertConexion)
+            }).catch(alertConexion)
         }
     }
 
     return (
         <Container className='mt-md-4 mt-3'>
+            <Card.Header className='bg-azul-dark text-white'>
+                <Card.Title style={{ paddingBlock: '0.5rem'}} className='m-0'>Restablecer contraseña</Card.Title>
+            </Card.Header>
             <Card className='shadow mx-auto'>
                 <Card.Body>
-                    <Card.Title>Restablecer contraseña</Card.Title>
                     <Card.Text>
                         Ingresa la dirección de correo electrónico con la que registraste tu cuenta, recibirás un correo con un código para restablecer tu contraseña.
                     </Card.Text>
